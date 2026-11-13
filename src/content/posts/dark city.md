@@ -1,5 +1,5 @@
 ---
-title: "DARK CITY 1998"
+title: "comienzo"
 date: 2026-11-13
 category: "Suspenso"
 description: "Una mirada profunda al tráiler y análisis de la obra maestra de Nolan."
