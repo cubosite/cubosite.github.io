@@ -1,0 +1,19 @@
+backend:
+  name: github
+  repo: cubosite/cubosite.github.io
+  branch: main
+
+media_folder: "public/uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "posts"
+    label: "Contenido de Cubosite"
+    folder: "src/content/posts"
+    create: true
+    fields:
+      - {label: "Título", name: "title", widget: "string"}
+      - {label: "Fecha de publicación", name: "date", widget: "datetime"}
+      - {label: "Categoría", name: "category", widget: "select", options: ["Artículos", "Películas", "Videos", "Noticias"]}
+      - {label: "Descripción breve", name: "description", widget: "text"}
+      - {label: "Cuerpo del contenido", name: "body", widget: "markdown"}
