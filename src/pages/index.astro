@@ -22,7 +22,7 @@ const titulo = "Cubosite 🧊";
       <div class="nav-container">
         <a href="#" class="logo">Cubosite 🧊</a>
         
-        <!-- Buscador integrado -->
+        <!-- Buscador superior -->
         <div class="search-box">
           <input 
             type="text" 
@@ -49,7 +49,6 @@ const titulo = "Cubosite 🧊";
     <!-- Contenido Principal -->
     <main class="container">
       <section class="hero">
-        <!-- Panel superior: Botones de tema + Widget de Hora e IP -->
         <div class="hero-top-bar">
           <div class="theme-switchers">
             <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
@@ -90,13 +89,55 @@ const titulo = "Cubosite 🧊";
           No se encontraron publicaciones en esta categoría o búsqueda 🧊
         </p>
       </section>
-
-      <footer>
-        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
-      </footer>
     </main>
 
-    <!-- Script de filtrado, temas, reloj e IP -->
+    <!-- Footer Avanzado en 3 Columnas + Buscador Inferior -->
+    <footer class="footer-advanced">
+      <div class="footer-container">
+        
+        <!-- Columna 1: Créditos y Descripción -->
+        <div class="footer-col">
+          <h3>Cubosite 🧊</h3>
+          <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
+          <span class="footer-badge">Estado: 100% Operativo 🚀</span>
+        </div>
+
+        <!-- Columna 2: Enlaces Rápidos y Contacto -->
+        <div class="footer-col">
+          <h4>Contacto & Enlaces</h4>
+          <ul>
+            <li><a href="#">📩 Soporte / Reportar Error</a></li>
+            <li><a href="https://github.com" target="_blank">🐙 Repositorio GitHub</a></li>
+            <li><a href="#">💡 Sugerir Contenido</a></li>
+            <li><a href="#">📜 Manual SKILL.md</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 3: Actualizaciones y Buscador Inferior -->
+        <div class="footer-col">
+          <h4>Actualizaciones & Búsqueda</h4>
+          <p class="update-info">Última versión: <strong>v3.5 Multitema</strong> (Nov 2026)</p>
+          
+          <!-- Barra de búsqueda inferior añadida -->
+          <div class="footer-search-box">
+            <input 
+              type="text" 
+              id="searchInputBottom" 
+              placeholder="🔍 Búsqueda rápida abajo..." 
+              autocomplete="off"
+            />
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Créditos finales de autoría -->
+      <div class="footer-bottom">
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- Script de filtrado sincronizado (arriba y abajo), temas, reloj e IP -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -147,7 +188,9 @@ const titulo = "Cubosite 🧊";
         });
       }
 
+      // Sincronización de buscadores (arriba y abajo)
       const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+      const searchInputBottom = document.getElementById('searchInputBottom') as HTMLInputElement;
       const cardsGrid = document.getElementById('cardsGrid');
       const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
       const filterButtons = document.querySelectorAll('.filter-btn');
@@ -165,18 +208,26 @@ const titulo = "Cubosite 🧊";
           filterButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentCategory = btn.getAttribute('data-category') || 'todos';
-          filterCards();
+          filterCards(searchInput ? searchInput.value : '');
         });
       });
 
       if (searchInput) {
         searchInput.addEventListener('input', () => {
-          filterCards();
+          if (searchInputBottom) searchInputBottom.value = searchInput.value;
+          filterCards(searchInput.value);
         });
       }
 
-      function filterCards() {
-        const searchTerm = searchInput ? normalizeText(searchInput.value) : '';
+      if (searchInputBottom) {
+        searchInputBottom.addEventListener('input', () => {
+          if (searchInput) searchInput.value = searchInputBottom.value;
+          filterCards(searchInputBottom.value);
+        });
+      }
+
+      function filterCards(termValue: string) {
+        const searchTerm = normalizeText(termValue);
         let visibleCount = 0;
 
         cards.forEach(card => {
@@ -185,265 +236,4 @@ const titulo = "Cubosite 🧊";
           const text = normalizeText(card.textContent);
 
           const normCurrentCat = normalizeText(currentCategory);
-          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
-          const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
-
-          if (matchesCategory && matchesSearch) {
-            (card as HTMLElement).style.display = 'block';
-            visibleCount++;
-          } else {
-            (card as HTMLElement).style.display = 'none';
-          }
-        });
-
-        if (noResults) {
-          if (visibleCount === 0) {
-            noResults.style.display = 'block';
-          } else {
-            noResults.style.display = 'none';
-          }
-        }
-      }
-    </script>
-  </body>
-</html>
-
-<style>
-  :root[data-theme="dark"] {
-    --bg-base: #030712;
-    --bg-surface: #0b0f19;
-    --bg-card: #111827;
-    --border-color: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-    --accent-glow: rgba(56, 189, 248, 0.1);
-  }
-
-  :root[data-theme="light"] {
-    --bg-base: #f1f5f9;
-    --bg-surface: #e2e8f0;
-    --bg-card: #ffffff;
-    --border-color: #cbd5e1;
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --accent: #0284c7;
-    --accent-glow: rgba(2, 132, 199, 0.1);
-  }
-
-  :root[data-theme="green"] {
-    --bg-base: #022c22;
-    --bg-surface: #064e3b;
-    --bg-card: #065f46;
-    --border-color: #047857;
-    --text-main: #ecfdf5;
-    --text-muted: #a7f3d0;
-    --accent: #34d399;
-    --accent-glow: rgba(52, 211, 153, 0.15);
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-base);
-    color: var(--text-main);
-    margin: 0;
-    padding: 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-
-  .navbar {
-    background-color: var(--bg-surface);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    padding: 1rem 2rem;
-  }
-
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .logo {
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--text-main);
-    text-decoration: none;
-  }
-
-  .search-box input {
-    background-color: var(--bg-base);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    outline: none;
-    width: 180px;
-    transition: all 0.2s ease;
-  }
-
-  .search-box input:focus {
-    border-color: var(--accent);
-    width: 230px;
-    box-shadow: 0 0 10px var(--accent-glow);
-  }
-
-  .search-box input::placeholder {
-    color: var(--text-muted);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .nav-links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: color 0.2s ease;
-    cursor: pointer;
-  }
-
-  .nav-links a:hover, .nav-links a.active {
-    color: var(--accent);
-  }
-
-  .container {
-    max-width: 1150px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-  }
-
-  .hero {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .hero-top-bar {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 1.25rem;
-    margin-bottom: 1.75rem;
-    flex-wrap: wrap;
-  }
-
-  .theme-switchers {
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 0.3rem;
-    border-radius: 9999px;
-    gap: 0.25rem;
-  }
-
-  .theme-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    padding: 0.45rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .theme-btn.active, .theme-btn:hover {
-    background-color: var(--accent);
-    color: var(--bg-base);
-  }
-
-  .info-widget {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.45rem 1.25rem;
-    border-radius: 9999px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .info-widget .divider {
-    color: var(--border-color);
-    font-weight: 400;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    margin: 1.2rem 0 1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  .hero p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  .content-section {
-    margin-bottom: 4rem;
-  }
-
-  .content-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .card {
-    display: block;
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    text-decoration: none;
-    color: inherit;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  }
-
-  .card:hover {
-    transform: translateY(-3px);
-    border-color: var(--accent);
-  }
-
-  .card:hover h3 {
-    color: var(--accent);
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    font-weight: 700;
-    background-color: var(--accent-glow);
-    padding: 0.25rem 0.6rem;
-    border-radius: 9999px
+          const matchesCategory
