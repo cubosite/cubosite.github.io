@@ -1,7 +1,7 @@
 ---
 title: "22222Título de tu película o artículo2222222"
 date: 2026-11-13
-category: "Videos"
+category: "Ficcion"
 description: "Una pequeña descripción de lo que trata que aparecerá en la tarjeta oscura."
 ---
 
