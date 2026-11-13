@@ -1,7 +1,7 @@
 ---
 title: "El señor de los anillos"
 date: 2026-11-13
-category: "Articulos"
+category: "Accion"
 description: "Probando que aparezca automáticamente en la página principal."
 ---
 
