@@ -11,29 +11,211 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+const titulo = "Cubosite 🧊";
 ---
 
 <html lang="es">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{post.data.title} - Cubosite</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body class="bg-[#030712] text-gray-100 font-sans min-h-screen p-6 md:p-12">
-    <main class="max-w-2xl mx-auto">
-      <a href="/" class="text-blue-400 text-sm hover:underline mb-6 inline-block">← Volver al inicio</a>
-      
-      <span class="text-blue-400 font-bold uppercase tracking-wider text-xs bg-blue-500/10 px-3 py-1 rounded-full">
-        {post.data.category}
-      </span>
-
-      <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-2 text-white">{post.data.title}</h1>
-      <p class="text-gray-400 text-xs mb-8">Publicado el {post.data.date.toLocaleDateString()}</p>
-
-      <!-- Contenido del Markdown (Aquí se renderiza el texto y los videos de YouTube) -->
-      <div class="prose prose-invert max-w-none text-gray-300 leading-relaxed space-y-4">
-        <Content />
+  <body>
+    <!-- Barra de Navegación idéntica al Index -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="/" class="logo">Cubosite 🧊</a>
+        <nav class="nav-links">
+          <a href="/">← Volver al inicio</a>
+        </nav>
       </div>
+    </header>
+
+    <!-- Contenido Principal del Post -->
+    <main class="container">
+      <article class="post-container">
+        
+        <!-- Categoría -->
+        <span class="tag">{post.data.category}</span>
+
+        <!-- Título -->
+        <h1 class="post-title">{post.data.title}</h1>
+
+        <!-- Fecha -->
+        <p class="date">
+          Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+
+        <!-- Cuerpo del Artículo / Videos (Markdown renderizado) -->
+        <div class="post-content">
+          <Content />
+        </div>
+
+        <!-- Botón inferior para regresar -->
+        <div class="mt-8 pt-6 border-t border-[var(--border-color)]">
+          <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
+        </div>
+
+      </article>
     </main>
+
+    <!-- Footer -->
+    <footer>
+      <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+    </footer>
   </body>
 </html>
+
+<style>
+  :root {
+    --bg-base: #030712;        /* Negro profundo */
+    --bg-surface: #0b0f19;     /* Azul muy oscuro / casi negro */
+    --bg-card: #111827;        /* Azul grisáceo oscuro para tarjetas */
+    --border-color: #1e293b;   /* Bordes sutiles azulados */
+    --text-main: #f8fafc;      /* Blanco brillante */
+    --text-muted: #94a3b8;     /* Gris azulado apagado */
+    --accent: #38bdf8;         /* Azul cian brillante */
+    --accent-glow: rgba(56, 189, 248, 0.1);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Navbar */
+  .navbar {
+    background-color: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+  }
+
+  .nav-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    text-decoration: none;
+  }
+
+  .nav-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+
+  .nav-links a:hover {
+    opacity: 0.8;
+  }
+
+  /* Container */
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .post-container {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 1rem;
+    padding: 2.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    font-weight: 700;
+    background-color: var(--accent-glow);
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    display: inline-block;
+  }
+
+  .post-title {
+    font-size: 2.25rem;
+    margin: 1rem 0 0.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.02em;
+  }
+
+  .date {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 1.5rem;
+  }
+
+  /* Estilos para el texto y videos dentro del Markdown */
+  .post-content {
+    color: #e2e8f0;
+    font-size: 1rem;
+    line-height: 1.7;
+  }
+
+  .post-content p {
+    margin-bottom: 1.25rem;
+  }
+
+  .post-content h2 {
+    color: var(--text-main);
+    font-size: 1.5rem;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+  }
+
+  .btn-back {
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+  }
+
+  .btn-back:hover {
+    text-decoration: underline;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border-color);
+    padding: 2rem;
+    background-color: var(--bg-surface);
+    margin-top: auto;
+  }
+</style>
