@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const titulo = "Cubosite 🧊";
+const titulo = "🧊CUBO SITE::";
 ---
 
 <html lang="es">
@@ -20,14 +20,14 @@ const titulo = "Cubosite 🧊";
     <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
-        <a href="#" class="logo">Cubosite 🧊</a>
+        <a href="#" class="logo">🧊website</a>
         
         <!-- Buscador integrado -->
         <div class="search-box">
           <input 
             type="text" 
             id="searchInput" 
-            placeholder="🔍 Buscar publicaciones..." 
+            placeholder="🔍 Buscar" 
             autocomplete="off"
           />
         </div>
@@ -79,7 +79,7 @@ const titulo = "Cubosite 🧊";
       </section>
 
       <footer>
-        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+        <p>🧊CuBo 2026. Todos los derechos reservados.</p>
       </footer>
     </main>
 
