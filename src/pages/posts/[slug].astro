@@ -11,8 +11,6 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
-
-const titulo = "🧊CUBO SITE::";
 ---
 
 <html lang="es">
@@ -23,10 +21,10 @@ const titulo = "🧊CUBO SITE::";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación idéntica al Index -->
+    <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
-        <a href="/" class="logo">🧊website</a>
+        <a href="/" class="logo">Cubosite 🧊</a>
         <nav class="nav-links">
           <a href="/">← Volver al inicio</a>
         </nav>
@@ -48,13 +46,13 @@ const titulo = "🧊CUBO SITE::";
           Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
 
-        <!-- Cuerpo del Artículo / Videos (Markdown renderizado) -->
+        <!-- Cuerpo del Artículo / Videos -->
         <div class="post-content">
           <Content />
         </div>
 
         <!-- Botón inferior para regresar -->
-        <div class="mt-8 pt-6 border-t border-[var(--border-color)]">
+        <div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
           <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
         </div>
 
@@ -63,20 +61,20 @@ const titulo = "🧊CUBO SITE::";
 
     <!-- Footer -->
     <footer>
-      <p>Hecho por🧊CuBo 2026. Todos los derechos reservados.</p>
+      <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
     </footer>
   </body>
 </html>
 
 <style>
   :root {
-    --bg-base: #030712;        /* Negro profundo */
-    --bg-surface: #0b0f19;     /* Azul muy oscuro / casi negro */
-    --bg-card: #111827;        /* Azul grisáceo oscuro para tarjetas */
-    --border-color: #1e293b;   /* Bordes sutiles azulados */
-    --text-main: #f8fafc;      /* Blanco brillante */
-    --text-muted: #94a3b8;     /* Gris azulado apagado */
-    --accent: #38bdf8;         /* Azul cian brillante */
+    --bg-base: #030712;
+    --bg-surface: #0b0f19;
+    --bg-card: #111827;
+    --border-color: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
     --accent-glow: rgba(56, 189, 248, 0.1);
   }
 
@@ -91,7 +89,6 @@ const titulo = "🧊CUBO SITE::";
     flex-direction: column;
   }
 
-  /* Navbar */
   .navbar {
     background-color: rgba(3, 7, 18, 0.85);
     backdrop-filter: blur(10px);
@@ -129,7 +126,6 @@ const titulo = "🧊CUBO SITE::";
     opacity: 0.8;
   }
 
-  /* Container */
   .container {
     max-width: 800px;
     margin: 0 auto;
@@ -176,7 +172,6 @@ const titulo = "🧊CUBO SITE::";
     padding-bottom: 1.5rem;
   }
 
-  /* Estilos para el texto y videos dentro del Markdown */
   .post-content {
     color: #e2e8f0;
     font-size: 1rem;
@@ -208,7 +203,6 @@ const titulo = "🧊CUBO SITE::";
     text-decoration: underline;
   }
 
-  /* Footer */
   footer {
     text-align: center;
     color: #64748b;
