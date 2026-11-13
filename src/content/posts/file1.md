@@ -1,5 +1,5 @@
 ---
-title: "DARK CITY 1998"
+title: "ARCHIVOS"
 date: 2026-11-13
 category: "+Archivos"
 description: "Una mirada profunda al tráiler y análisis de la obra maestra de Nolan."
