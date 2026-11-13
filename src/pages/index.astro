@@ -49,7 +49,7 @@ const titulo = "Cubosite 🧊";
     <!-- Contenido Principal -->
     <main class="container">
       <section class="hero">
-        <!-- Panel superior: Botones de tema + Widget de Hora e IP nivelados -->
+        <!-- Panel superior: Botones de tema + Widget de Hora (sin segundos) e IP -->
         <div class="hero-top-bar">
           <div class="theme-switchers">
             <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
@@ -102,12 +102,13 @@ const titulo = "Cubosite 🧊";
 
     <!-- Script de filtrado, temas, reloj e IP -->
     <script>
-      // --- 1. Reloj en tiempo real ---
+      // --- 1. Reloj en tiempo real (sin segundos: hour: '2-digit', minute: '2-digit') ---
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
           const now = new Date();
-          clockElement.textContent = `🕒 ${now.toLocaleTimeString()}`;
+          const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+          clockElement.textContent = `🕒 ${timeString}`;
         }
       }
       setInterval(updateClock, 1000);
