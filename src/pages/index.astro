@@ -22,7 +22,7 @@ const titulo = "Cubosite 🧊";
       <div class="nav-container">
         <a href="#" class="logo">Cubosite 🧊</a>
         
-        <!-- Buscador superior -->
+        <!-- Buscador integrado -->
         <div class="search-box">
           <input 
             type="text" 
@@ -88,6 +88,13 @@ const titulo = "Cubosite 🧊";
         <p id="noResults" style="display: none; text-align: center; color: var(--text-muted); margin-top: 2rem;">
           No se encontraron publicaciones en esta categoría o búsqueda 🧊
         </p>
+
+        <!-- Controles de Paginación (24 por página) -->
+        <div class="pagination-container" id="paginationControls">
+          <button id="prevPageBtn" class="page-btn">← Anterior</button>
+          <span id="pageInfo" class="page-info">Página 1 de 1</span>
+          <button id="nextPageBtn" class="page-btn">Siguiente →</button>
+        </div>
       </section>
     </main>
 
@@ -95,14 +102,14 @@ const titulo = "Cubosite 🧊";
     <footer class="footer-advanced">
       <div class="footer-container">
         
-        <!-- Columna 1: Créditos y Descripción -->
+        <!-- Columna 1 -->
         <div class="footer-col">
           <h3>Cubosite 🧊</h3>
           <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
           <span class="footer-badge">Estado: 100% Operativo 🚀</span>
         </div>
 
-        <!-- Columna 2: Enlaces Rápidos y Contacto -->
+        <!-- Columna 2 -->
         <div class="footer-col">
           <h4>Contacto & Enlaces</h4>
           <ul>
@@ -113,12 +120,11 @@ const titulo = "Cubosite 🧊";
           </ul>
         </div>
 
-        <!-- Columna 3: Actualizaciones y Buscador Inferior -->
+        <!-- Columna 3 -->
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Última versión: <strong>v3.5 Multitema</strong> (Nov 2026)</p>
+          <p class="update-info">Versión: <strong>v3.6 Paginada</strong> (24/pág)</p>
           
-          <!-- Barra de búsqueda inferior añadida -->
           <div class="footer-search-box">
             <input 
               type="text" 
@@ -131,13 +137,12 @@ const titulo = "Cubosite 🧊";
 
       </div>
 
-      <!-- Créditos finales de autoría -->
       <div class="footer-bottom">
         <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
       </div>
     </footer>
 
-    <!-- Script de filtrado sincronizado (arriba y abajo), temas, reloj e IP -->
+    <!-- Script de Paginación, Filtrado, Temas, Reloj e IP -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -188,15 +193,21 @@ const titulo = "Cubosite 🧊";
         });
       }
 
-      // Sincronización de buscadores (arriba y abajo)
+      // --- PAGINACIÓN Y FILTRADO ---
       const searchInput = document.getElementById('searchInput') as HTMLInputElement;
       const searchInputBottom = document.getElementById('searchInputBottom') as HTMLInputElement;
       const cardsGrid = document.getElementById('cardsGrid');
       const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
       const filterButtons = document.querySelectorAll('.filter-btn');
       const noResults = document.getElementById('noResults');
+      
+      const prevBtn = document.getElementById('prevPageBtn') as HTMLButtonElement;
+      const nextBtn = document.getElementById('nextPageBtn') as HTMLButtonElement;
+      const pageInfo = document.getElementById('pageInfo');
 
       let currentCategory = 'todos';
+      let currentPage = 1;
+      const itemsPerPage = 24;
 
       function normalizeText(text: string) {
         return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
@@ -208,32 +219,57 @@ const titulo = "Cubosite 🧊";
           filterButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
           currentCategory = btn.getAttribute('data-category') || 'todos';
-          filterCards(searchInput ? searchInput.value : '');
+          currentPage = 1; // Reiniciar a la página 1 al cambiar de categoría
+          filterAndPaginate();
         });
       });
 
       if (searchInput) {
         searchInput.addEventListener('input', () => {
           if (searchInputBottom) searchInputBottom.value = searchInput.value;
-          filterCards(searchInput.value);
+          currentPage = 1;
+          filterAndPaginate();
         });
       }
 
       if (searchInputBottom) {
         searchInputBottom.addEventListener('input', () => {
           if (searchInput) searchInput.value = searchInputBottom.value;
-          filterCards(searchInputBottom.value);
+          currentPage = 1;
+          filterAndPaginate();
         });
       }
 
-      function filterCards(termValue: string) {
-        const searchTerm = normalizeText(termValue);
-        let visibleCount = 0;
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
 
-        cards.forEach(card => {
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          const termValue = searchInput ? searchInput.value : '';
+          const filteredCards = getFilteredCards(termValue);
+          const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
+          if (currentPage < totalPages) {
+            currentPage++;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
+
+      function getFilteredCards(termValue: string) {
+        const searchTerm = normalizeText(termValue);
+        return cards.filter(card => {
           const title = normalizeText(card.getAttribute('data-title'));
           const category = normalizeText(card.getAttribute('data-category'));
           const text = normalizeText(card.textContent);
 
           const normCurrentCat = normalizeText(currentCategory);
-          const matchesCategory
+          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
+          const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
