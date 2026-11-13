@@ -21,61 +21,79 @@ const { Content } = await post.render();
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación -->
+    <!-- Barra de Navegación idéntica al Index -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
+        
+        <!-- Buscador integrado -->
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="🔍 Buscar publicaciones..." 
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Enlaces / Categorías de retorno -->
         <nav class="nav-links">
-          <a href="/">← Volver al inicio</a>
+          <a href="/">Inicio</a>
+          <a href="/" class="active">← Volver</a>
         </nav>
       </div>
     </header>
 
-    <!-- Contenido Principal del Post -->
+    <!-- Contenido Principal -->
     <main class="container">
-      
-      <!-- Panel superior: Selector de temas + Reloj e IP -->
-      <div class="hero-top-bar">
-        <div class="theme-switchers">
-          <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
-          <button class="theme-btn" data-theme-target="light">☀️ Gris Claro</button>
-          <button class="theme-btn" data-theme-target="green">🟢 Green</button>
+      <section class="hero">
+        <div class="hero-top-bar">
+          <div class="theme-switchers">
+            <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
+            <button class="theme-btn" data-theme-target="light">☀️ Gris Claro</button>
+            <button class="theme-btn" data-theme-target="green">🟢 Green</button>
+          </div>
+          
+          <div class="info-widget">
+            <span id="liveClock">🕒 Cargando hora...</span>
+            <span class="divider">|</span>
+            <span id="userIp">🌐 IP: Cargando...</span>
+          </div>
         </div>
-        
-        <div class="info-widget">
-          <span id="liveClock">🕒 Cargando...</span>
-          <span class="divider">|</span>
-          <span id="userIp">🌐 IP: Cargando...</span>
-        </div>
-      </div>
+      </section>
 
-      <!-- Tarjeta Contenedora del Artículo -->
-      <article class="post-container">
-        <span class="tag">{post.data.category}</span>
-        <h1 class="post-title">{post.data.title}</h1>
-        <p class="date">
-          Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
-        </p>
+      <!-- Tarjeta Contenedora del Artículo Estilo Index -->
+      <section class="content-section">
+        <article class="post-container">
+          <span class="tag">{post.data.category}</span>
+          <h1 class="post-title">{post.data.title}</h1>
+          <p class="date">
+            Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+          </p>
 
-        <div class="post-content">
-          <Content />
-        </div>
+          <div class="post-content">
+            <Content />
+          </div>
 
-        <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
-          <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
-        </div>
-      </article>
+          <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+            <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
+          </div>
+        </article>
+      </section>
     </main>
 
-    <!-- Footer Avanzado en 3 Columnas -->
+    <!-- Footer Avanzado en 3 Columnas idéntico al Index -->
     <footer class="footer-advanced">
       <div class="footer-container">
+        
+        <!-- Columna 1 -->
         <div class="footer-col">
           <h3>Cubosite 🧊</h3>
           <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
           <span class="footer-badge">Estado: 100% Operativo 🚀</span>
         </div>
 
+        <!-- Columna 2 -->
         <div class="footer-col">
           <h4>Contacto & Enlaces</h4>
           <ul>
@@ -86,11 +104,21 @@ const { Content } = await post.render();
           </ul>
         </div>
 
+        <!-- Columna 3 -->
         <div class="footer-col">
-          <h4>Actualizaciones</h4>
-          <p class="update-info">Última versión: <strong>v3.6</strong> (Nov 2026)</p>
-          <p style="font-size: 0.8rem; color: var(--text-muted);">Explora las colecciones desde el menú principal.</p>
+          <h4>Actualizaciones & Búsqueda</h4>
+          <p class="update-info">Versión: <strong>v3.6 Post</strong></p>
+          
+          <div class="footer-search-box">
+            <input 
+              type="text" 
+              id="searchInputBottom" 
+              placeholder="🔍 Búsqueda rápida abajo..." 
+              autocomplete="off"
+            />
+          </div>
         </div>
+
       </div>
 
       <div class="footer-bottom">
@@ -98,7 +126,7 @@ const { Content } = await post.render();
       </div>
     </footer>
 
-    <!-- Script de Reloj, IP y Temas -->
+    <!-- Script de Temas, Reloj, IP y redirección del buscador al inicio -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -148,16 +176,11 @@ const { Content } = await post.render();
           }
         });
       }
-    </script>
-  </body>
-</html>
 
-<style>
-  :root[data-theme="dark"] {
-    --bg-base: #030712;
-    --bg-surface: #0b0f19;
-    --bg-card: #111827;
-    --border-color: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
+      // Redirigir la búsqueda al index si escriben en el buscador desde un artículo
+      const searchInput = document.getElementById('searchInput');
+      const searchInputBottom = document.getElementById('searchInputBottom');
+
+      function redirectToHomeSearch(e) {
+        if (e.key === 'Enter' && e.target.value.trim() !== '') {
+          window.location.href =
