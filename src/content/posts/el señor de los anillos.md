@@ -1,5 +1,5 @@
 ---
-title: "El señor de los anillos"
+title: "OTRA PRUEBA"
 date: 2026-11-13
 category: "Accion"
 description: "Probando que aparezca automáticamente en la página principal."
