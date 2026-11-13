@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   return posts.map((post) => ({
-    params: { slug: post.slug },
+    params: { slug: post.slug || post.id },
     props: { post },
   }));
 }
@@ -69,15 +69,12 @@ const { Content } = await post.render();
     <!-- Footer Avanzado en 3 Columnas -->
     <footer class="footer-advanced">
       <div class="footer-container">
-        
-        <!-- Columna 1 -->
         <div class="footer-col">
           <h3>Cubosite 🧊</h3>
           <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
           <span class="footer-badge">Estado: 100% Operativo 🚀</span>
         </div>
 
-        <!-- Columna 2 -->
         <div class="footer-col">
           <h4>Contacto & Enlaces</h4>
           <ul>
@@ -88,16 +85,13 @@ const { Content } = await post.render();
           </ul>
         </div>
 
-        <!-- Columna 3 -->
         <div class="footer-col">
           <h4>Actualizaciones</h4>
-          <p class="update-info">Última versión: <strong>v3.5 Multitema</strong> (Nov 2026)</p>
+          <p class="update-info">Última versión: <strong>v3.6</strong> (Nov 2026)</p>
           <p style="font-size: 0.8rem; color: var(--text-muted);">Explora las colecciones de películas, series y archivos desde el menú principal.</p>
         </div>
-
       </div>
 
-      <!-- Créditos finales -->
       <div class="footer-bottom">
         <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
       </div>
@@ -327,7 +321,6 @@ const { Content } = await post.render();
     text-decoration: underline;
   }
 
-  /* --- FOOTER AVANZADO (Estilos completos) --- */
   .footer-advanced {
     background-color: var(--bg-surface);
     border-top: 1px solid var(--border-color);
