@@ -1,16 +1,143 @@
 ---
-// Página de bienvenida de Cubosite
+// Cubosite - Página principal renovada
+const titulo = "Cubosite 🧊";
+const subtitulo = "Bitácora personal, desarrollo y curiosidades en el código.";
 ---
+
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Cubosite 🧊</title>
+    <title>{titulo}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
   </head>
-  <body style="font-family: sans-serif; text-align: center; margin-top: 20vh; background: #0f172a; color: #f8fafc;">
-    <h1>¡Bienvenido a Cubosite! 🧊</h1>
-    <p>Mi nuevo espacio personal impulsado por Astro, rápido y sin complicaciones.</p>
+  <body>
+    <main class="container">
+      <header class="hero">
+        <span class="badge">En línea 🚀</span>
+        <h1>¡Hola, soy Cubo! 👋</h1>
+        <p>{subtitulo}</p>
+      </header>
+
+      <section class="grid">
+        <div class="card">
+          <h3>⚡️ Ultra Rápido</h3>
+          <p>Construido con Astro, generando HTML estático sin cargas innecesarias de JavaScript.</p>
+        </div>
+        <div class="card">
+          <h3>🧊 Cero Dolor de Cabeza</h3>
+          <p>Adiós a las validaciones estrictas de commits y errores de dependencias en Ruby.</p>
+        </div>
+        <div class="card">
+          <h3>🛠️ Espacio Propio</h3>
+          <p>Un entorno limpio, directo al grano y listo para escribir sobre lo que me apasiona.</p>
+        </div>
+      </section>
+
+      <footer>
+        <p>Hecho con 🧊 y Astro en <strong>Cubosite</strong>.</p>
+      </footer>
+    </main>
   </body>
 </html>
+
+<style>
+  :root {
+    --bg: #0b0f19;
+    --card-bg: #111827;
+    --text: #f3f4f6;
+    --text-muted: #9ca3af;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.15);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg);
+    color: var(--text);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    min-height: 100vh;
+  }
+
+  .container {
+    max-width: 800px;
+    width: 100%;
+    padding: 4rem 2rem;
+    box-sizing: border-box;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .badge {
+    background-color: var(--accent-glow);
+    color: var(--accent);
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
+  h1 {
+    font-size: 2.75rem;
+    margin: 1.5rem 0 1rem;
+    font-weight: 800;
+    letter-spacing: -0.025em;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.15rem;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+
+  .card {
+    background-color: var(--card-bg);
+    border: 1px solid #1f2937;
+    padding: 1.75rem;
+    border-radius: 1rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    border-color: var(--accent);
+  }
+
+  .card h3 {
+    margin-top: 0;
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .card p {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  footer {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.875rem;
+    border-top: 1px solid #1f2937;
+    padding-top: 2rem;
+  }
+</style>
