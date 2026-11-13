@@ -1,10 +1,10 @@
-o---
+---
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-const titulo = "🧊CUBO SITE::";
+const titulo = "Cubosite 🧊";
 ---
 
 <html lang="es">
@@ -17,9 +17,7 @@ const titulo = "🧊CUBO SITE::";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-
-
- <!-- Barra de Navegación -->
+    <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
         <a href="#" class="logo">Cubosite 🧊</a>
@@ -34,7 +32,7 @@ const titulo = "🧊CUBO SITE::";
           />
         </div>
 
-        <!-- Filtros por categoría (Incluyendo +Archivos) -->
+        <!-- Filtros por categoría -->
         <nav class="nav-links">
           <a href="#" class="filter-btn active" data-category="todos">Inicio</a>
           <a href="#terror" class="filter-btn" data-category="Terror">Terror</a>
@@ -42,12 +40,10 @@ const titulo = "🧊CUBO SITE::";
           <a href="#ficcion" class="filter-btn" data-category="Ficcion">Ficción</a>
           <a href="#drama" class="filter-btn" data-category="Drama">Drama</a>
           <a href="#accion" class="filter-btn" data-category="Accion">Acción</a>
-          <a href="#accion" class="filter-btn" data-category="Suspenso">Suspenso</a>
           <a href="#archivos" class="filter-btn" data-category="+Archivos">+Archivos</a>
         </nav>
       </div>
     </header>
-
 
     <!-- Contenido Principal -->
     <main class="container">
@@ -85,7 +81,7 @@ const titulo = "🧊CUBO SITE::";
       </section>
 
       <footer>
-        <p>Hecho por🧊CuBo 2026. Todos los derechos reservados.</p>
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
       </footer>
     </main>
 
@@ -183,7 +179,7 @@ const titulo = "🧊CUBO SITE::";
   }
 
   .nav-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 0 auto;
     display: flex;
     justify-content: space-between;
@@ -207,13 +203,13 @@ const titulo = "🧊CUBO SITE::";
     border-radius: 9999px;
     font-size: 0.85rem;
     outline: none;
-    width: 200px;
+    width: 180px;
     transition: all 0.2s ease;
   }
 
   .search-box input:focus {
     border-color: var(--accent);
-    width: 250px;
+    width: 230px;
     box-shadow: 0 0 10px var(--accent-glow);
   }
 
@@ -223,14 +219,15 @@ const titulo = "🧊CUBO SITE::";
 
   .nav-links {
     display: flex;
-    gap: 1.5rem;
+    gap: 1.2rem;
     flex-wrap: wrap;
+    align-items: center;
   }
 
   .nav-links a {
     color: var(--text-muted);
     text-decoration: none;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     font-weight: 500;
     transition: color 0.2s ease;
     cursor: pointer;
@@ -240,8 +237,9 @@ const titulo = "🧊CUBO SITE::";
     color: var(--accent);
   }
 
+  /* Ampliamos el contenedor principal para que quepan bien las 4 columnas */
   .container {
-    max-width: 900px;
+    max-width: 1150px;
     margin: 0 auto;
     padding: 4rem 2rem;
   }
@@ -287,9 +285,10 @@ const titulo = "🧊CUBO SITE::";
     padding-bottom: 0.5rem;
   }
 
+  /* Cambiamos minmax a 220px para forzar que entren 4 tarjetas en pantallas grandes */
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     gap: 1.5rem;
   }
 
@@ -333,12 +332,12 @@ const titulo = "🧊CUBO SITE::";
 
   .card h3 {
     margin: 0 0 0.5rem;
-    font-size: 1.15rem;
+    font-size: 1.1rem;
   }
 
   .card p {
     color: var(--text-muted);
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     line-height: 1.5;
     margin: 0 0 1rem;
   }
