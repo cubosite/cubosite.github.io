@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { post },
+  }));
+}
+
+const { post } = Astro.props;
+const { Content } = await post.render();
+---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>{post.data.title} - Cubosite</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#030712] text-gray-100 font-sans min-h-screen p-6 md:p-12">
+    <main class="max-w-2xl mx-auto">
+      <a href="/" class="text-blue-400 text-sm hover:underline mb-6 inline-block">← Volver al inicio</a>
+      
+      <span class="text-blue-400 font-bold uppercase tracking-wider text-xs bg-blue-500/10 px-3 py-1 rounded-full">
+        {post.data.category}
+      </span>
+
+      <h1 class="text-3xl md:text-4xl font-extrabold mt-4 mb-2 text-white">{post.data.title}</h1>
+      <p class="text-gray-400 text-xs mb-8">Publicado el {post.data.date.toLocaleDateString()}</p>
+
+      <!-- Contenido del Markdown (Aquí se renderiza el texto y los videos de YouTube) -->
+      <div class="prose prose-invert max-w-none text-gray-300 leading-relaxed space-y-4">
+        <Content />
+      </div>
+    </main>
+  </body>
+</html>
