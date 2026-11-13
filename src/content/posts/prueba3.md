@@ -1,5 +1,5 @@
 ---
-title: "Título de tu película o artículo"
+title: "prueba 4"
 date: 2026-11-13
 category: "Comedia"
 description: "Una pequeña descripción de lo que trata que aparecerá en la tarjeta oscura."
