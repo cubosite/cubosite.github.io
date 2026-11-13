@@ -13,7 +13,7 @@ const { post } = Astro.props;
 const { Content } = await post.render();
 ---
 
-<html lang="es">
+<html lang="es" data-theme="dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -25,9 +25,16 @@ const { Content } = await post.render();
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
-        <nav class="nav-links">
-          <a href="/">← Volver al inicio</a>
-        </nav>
+        
+        <!-- Sincronizador de tema y botón de regreso -->
+        <div class="nav-actions">
+          <div class="theme-switchers">
+            <button class="theme-btn active" data-theme-target="dark" title="Modo Dark">🌙</button>
+            <button class="theme-btn" data-theme-target="light" title="Gris Claro">☀️</button>
+            <button class="theme-btn" data-theme-target="green" title="Modo Green">🟢</button>
+          </div>
+          <a href="/" class="btn-back-nav">← Volver al inicio</a>
+        </div>
       </div>
     </header>
 
@@ -35,7 +42,7 @@ const { Content } = await post.render();
     <main class="container">
       <article class="post-container">
         
-        <!-- Categoría dinámica (Terror, Comedia, Ficción, Drama, Acción, Suspenso, +Archivos) -->
+        <!-- Categoría -->
         <span class="tag">{post.data.category}</span>
 
         <!-- Título -->
@@ -46,13 +53,13 @@ const { Content } = await post.render();
           Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
 
-        <!-- Cuerpo del Artículo / Videos (YouTube, Streamtape, OK.ru) -->
+        <!-- Cuerpo del Artículo / Videos -->
         <div class="post-content">
           <Content />
         </div>
 
         <!-- Botón inferior para regresar -->
-        <div style="margin-top: 2rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+        <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
           <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
         </div>
 
@@ -63,11 +70,41 @@ const { Content } = await post.render();
     <footer>
       <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
     </footer>
+
+    <!-- Script para recordar el tema activo -->
+    <script>
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      themeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          themeButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const targetTheme = btn.getAttribute('data-theme-target');
+          if (targetTheme) {
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('cubo-theme', targetTheme);
+          }
+        });
+      });
+
+      // Cargar el tema que eligió el usuario en el inicio
+      const savedTheme = localStorage.getItem('cubo-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeButtons.forEach(b => {
+          if (b.getAttribute('data-theme-target') === savedTheme) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+      }
+    </script>
   </body>
 </html>
 
 <style>
-  :root {
+  /* --- PALETAS DE COLORES (Mismos temas del inicio) --- */
+  :root[data-theme="dark"] {
     --bg-base: #030712;
     --bg-surface: #0b0f19;
     --bg-card: #111827;
@@ -76,6 +113,28 @@ const { Content } = await post.render();
     --text-muted: #94a3b8;
     --accent: #38bdf8;
     --accent-glow: rgba(56, 189, 248, 0.1);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --bg-surface: #e2e8f0;
+    --bg-card: #ffffff;
+    --border-color: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+    --accent-glow: rgba(2, 132, 199, 0.1);
+  }
+
+  :root[data-theme="green"] {
+    --bg-base: #022c22;
+    --bg-surface: #064e3b;
+    --bg-card: #065f46;
+    --border-color: #047857;
+    --text-main: #ecfdf5;
+    --text-muted: #a7f3d0;
+    --accent: #34d399;
+    --accent-glow: rgba(52, 211, 153, 0.15);
   }
 
   body {
@@ -87,10 +146,11 @@ const { Content } = await post.render();
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   .navbar {
-    background-color: rgba(3, 7, 18, 0.85);
+    background-color: var(--bg-surface);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border-color);
     position: sticky;
@@ -105,6 +165,8 @@ const { Content } = await post.render();
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 
   .logo {
@@ -114,7 +176,39 @@ const { Content } = await post.render();
     text-decoration: none;
   }
 
-  .nav-links a {
+  .nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .theme-switchers {
+    display: flex;
+    align-items: center;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 0.2rem;
+    border-radius: 9999px;
+    gap: 0.2rem;
+  }
+
+  .theme-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    padding: 0.3rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .theme-btn.active, .theme-btn:hover {
+    background-color: var(--accent);
+    color: var(--bg-base);
+  }
+
+  .btn-back-nav {
     color: var(--accent);
     text-decoration: none;
     font-size: 0.9rem;
@@ -122,12 +216,12 @@ const { Content } = await post.render();
     transition: opacity 0.2s ease;
   }
 
-  .nav-links a:hover {
+  .btn-back-nav:hover {
     opacity: 0.8;
   }
 
   .container {
-    max-width: 800px;
+    max-width: 850px;
     margin: 0 auto;
     padding: 3rem 2rem;
     flex: 1;
@@ -140,76 +234,5 @@ const { Content } = await post.render();
     border: 1px solid var(--border-color);
     border-radius: 1rem;
     padding: 2.5rem;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
   }
-
-  .tag {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    font-weight: 700;
-    background-color: var(--accent-glow);
-    padding: 0.35rem 0.85rem;
-    border-radius: 9999px;
-    border: 1px solid rgba(56, 189, 248, 0.2);
-    display: inline-block;
-  }
-
-  .post-title {
-    font-size: 2.25rem;
-    margin: 1rem 0 0.5rem;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -0.02em;
-  }
-
-  .date {
-    font-size: 0.85rem;
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1.5rem;
-  }
-
-  .post-content {
-    color: #e2e8f0;
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-
-  .post-content p {
-    margin-bottom: 1.25rem;
-  }
-
-  .post-content h2 {
-    color: var(--text-main);
-    font-size: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-  }
-
-  .btn-back {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: color 0.2s ease;
-  }
-
-  .btn-back:hover {
-    text-decoration: underline;
-  }
-
-  footer {
-    text-align: center;
-    color: #64748b;
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border-color);
-    padding: 2rem;
-    background-color: var(--bg-surface);
-    margin-top: auto;
-  }
-</style>
