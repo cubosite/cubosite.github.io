@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 
+// Cargamos automáticamente todas las publicaciones de la carpeta src/content/posts/
 const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
@@ -22,7 +23,7 @@ const titulo = "Cubosite 🧊";
       <div class="nav-container">
         <a href="#" class="logo">Cubosite 🧊</a>
         
-        <!-- Buscador integrado -->
+        <!-- Buscador integrado en tiempo real -->
         <div class="search-box">
           <input 
             type="text" 
@@ -32,6 +33,7 @@ const titulo = "Cubosite 🧊";
           />
         </div>
 
+        <!-- Filtros por categoría -->
         <nav class="nav-links">
           <a href="#" class="filter-btn active" data-category="todos">Inicio</a>
           <a href="#peliculas" class="filter-btn" data-category="películas">Películas</a>
@@ -50,15 +52,19 @@ const titulo = "Cubosite 🧊";
         <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
 
-      <!-- Secciones de Contenido Dinámico con Filtros -->
+      <!-- Secciones de Contenido Dinámico -->
       <section class="content-section">
-        <h2>Todas las Publicaciones</h2>
+        <h2>Últimas Publicaciones</h2>
         
         <div class="grid" id="cardsGrid">
           {posts.map((post) => (
             <article class="card" data-title={post.data.title} data-category={post.data.category.toLowerCase()}>
               <span class="tag">{post.data.category}</span>
-              <h3>{post.data.title}</h3>
+              <h3>
+                <a href={`/posts/${post.slug}`} class="card-link">
+                  {post.data.title}
+                </a>
+              </h3>
               <p>{post.data.description}</p>
               <span class="date">
                 Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
@@ -69,7 +75,7 @@ const titulo = "Cubosite 🧊";
 
         <!-- Mensaje si no hay resultados -->
         <p id="noResults" style="display: none; text-align: center; color: var(--text-muted); margin-top: 2rem;">
-          No se encontraron publicaciones en esta categoría 🧊
+          No se encontraron publicaciones en esta categoría o búsqueda 🧊
         </p>
       </section>
 
@@ -78,10 +84,11 @@ const titulo = "Cubosite 🧊";
       </footer>
     </main>
 
-    <!-- Script de filtrado por categoría y buscador -->
+    <!-- Script de filtrado por categoría y buscador en tiempo real -->
     <script>
-      const searchInput = document.getElementById('searchInput');
-      const cards = document.getElementsByClassName('card');
+      const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+      const cardsGrid = document.getElementById('cardsGrid');
+      const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
       const filterButtons = document.querySelectorAll('.filter-btn');
       const noResults = document.getElementById('noResults');
 
@@ -92,44 +99,47 @@ const titulo = "Cubosite 🧊";
         btn.addEventListener('click', (e) => {
           e.preventDefault();
           
-          // Cambiar clase activa visual
           filterButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
 
-          currentCategory = btn.getAttribute('data-category');
+          currentCategory = btn.getAttribute('data-category') || 'todos';
           filterCards();
         });
       });
 
-      // Filtrar al escribir en el buscador
-      searchInput.addEventListener('input', () => {
-        filterCards();
-      });
+      // Filtrar al escribir en la barra de búsqueda
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          filterCards();
+        });
+      }
 
       function filterCards() {
-        const searchTerm = searchInput.value.toLowerCase().trim();
+        const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
         let visibleCount = 0;
 
-        Array.from(cards).forEach(card => {
-          const title = card.getAttribute('data-title').toLowerCase();
-          const category = card.getAttribute('data-category').toLowerCase();
-          const text = card.textContent.toLowerCase();
+        cards.forEach(card => {
+          const title = card.getAttribute('data-title')?.toLowerCase() || '';
+          const category = card.getAttribute('data-category')?.toLowerCase() || '';
+          const text = card.textContent?.toLowerCase() || '';
 
           const matchesCategory = (currentCategory === 'todos' || category.includes(currentCategory));
           const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
 
           if (matchesCategory && matchesSearch) {
-            card.style.display = '';
+            (card as HTMLElement).style.display = '';
             visibleCount++;
           } else {
-            card.style.display = 'none';
+            (card as HTMLElement).style.display = 'none';
           }
         });
 
-        if (visibleCount === 0) {
-          noResults.style.display = 'block';
-        } else {
-          noResults.style.display = 'none';
+        if (noResults) {
+          if (visibleCount === 0) {
+            noResults.style.display = 'block';
+          } else {
+            noResults.style.display = 'none';
+          }
         }
       }
     </script>
@@ -138,13 +148,13 @@ const titulo = "Cubosite 🧊";
 
 <style>
   :root {
-    --bg-base: #030712;
-    --bg-surface: #0b0f19;
-    --bg-card: #111827;
-    --border-color: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
+    --bg-base: #030712;        /* Negro profundo */
+    --bg-surface: #0b0f19;     /* Azul muy oscuro / casi negro */
+    --bg-card: #111827;        /* Azul grisáceo oscuro para tarjetas */
+    --border-color: #1e293b;   /* Bordes sutiles azulados */
+    --text-main: #f8fafc;      /* Blanco brillante */
+    --text-muted: #94a3b8;     /* Gris azulado apagado */
+    --accent: #38bdf8;         /* Azul cian brillante */
     --accent-glow: rgba(56, 189, 248, 0.1);
   }
 
@@ -156,6 +166,7 @@ const titulo = "Cubosite 🧊";
     padding: 0;
   }
 
+  /* Navbar */
   .navbar {
     background-color: rgba(3, 7, 18, 0.85);
     backdrop-filter: blur(10px);
@@ -183,6 +194,7 @@ const titulo = "Cubosite 🧊";
     text-decoration: none;
   }
 
+  /* Buscador */
   .search-box input {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
@@ -224,12 +236,14 @@ const titulo = "Cubosite 🧊";
     color: var(--accent);
   }
 
+  /* Container */
   .container {
     max-width: 900px;
     margin: 0 auto;
     padding: 4rem 2rem;
   }
 
+  /* Hero */
   .hero {
     text-align: center;
     margin-bottom: 3rem;
@@ -260,6 +274,7 @@ const titulo = "Cubosite 🧊";
     line-height: 1.6;
   }
 
+  /* Sections */
   .content-section {
     margin-bottom: 4rem;
   }
@@ -290,6 +305,16 @@ const titulo = "Cubosite 🧊";
     border-color: rgba(56, 189, 248, 0.4);
   }
 
+  .card-link {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .card-link:hover {
+    color: var(--accent);
+  }
+
   .tag {
     font-size: 0.75rem;
     text-transform: uppercase;
@@ -315,6 +340,7 @@ const titulo = "Cubosite 🧊";
     color: #64748b;
   }
 
+  /* Footer */
   footer {
     text-align: center;
     color: #64748b;
