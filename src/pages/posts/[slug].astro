@@ -17,7 +17,7 @@ const { Content } = await post.render();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{post.data.title} - Cubosite</title>
+    <title>{post.data.title} - Cubosite 🧊</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
@@ -35,7 +35,7 @@ const { Content } = await post.render();
     <main class="container">
       <article class="post-container">
         
-        <!-- Categoría -->
+        <!-- Categoría dinámica (Terror, Comedia, Ficción, Drama, Acción, Suspenso, +Archivos) -->
         <span class="tag">{post.data.category}</span>
 
         <!-- Título -->
@@ -46,7 +46,7 @@ const { Content } = await post.render();
           Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
         </p>
 
-        <!-- Cuerpo del Artículo / Videos -->
+        <!-- Cuerpo del Artículo / Videos (YouTube, Streamtape, OK.ru) -->
         <div class="post-content">
           <Content />
         </div>
