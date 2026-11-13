@@ -1,5 +1,5 @@
 ---
-// Cubosite - Versión Dark & Modern con Categorías
+// Cubosite - Versión Dark & Modern con Buscador Integrado 🧊
 const titulo = "Cubosite 🧊";
 const categorias = [
   { nombre: "Inicio", url: "#", activo: true },
@@ -24,6 +24,17 @@ const categorias = [
     <header class="navbar">
       <div class="nav-container">
         <a href="#" class="logo">Cubosite 🧊</a>
+        
+        <!-- Buscador integrado en la barra de navegación -->
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="🔍 Buscar en Cubosite..." 
+            autocomplete="off"
+          />
+        </div>
+
         <nav class="nav-links">
           {categorias.map(cat => (
             <a href={cat.url} class={cat.activo ? "active" : ""}>{cat.nombre}</a>
@@ -50,27 +61,74 @@ const categorias = [
       <!-- Secciones de Contenido -->
       <section id="articulos" class="content-section">
         <h2>Últimos Artículos</h2>
-        <div class="grid">
-          <article class="card">
+        <div class="grid" id="cardsGrid">
+          
+          <article class="card" data-title="Migrando de Jekyll a Astro en GitHub Pages" data-category="Tecnología Artículos">
             <span class="tag">Tecnología</span>
             <h3>Migrando de Jekyll a Astro en GitHub Pages</h3>
             <p>Cómo eliminé los dolores de cabeza de las validaciones de commits y logré un despliegue limpio y veloz.</p>
             <span class="date">Hace 2 días</span>
           </article>
 
-          <article class="card">
+          <article class="card" data-title="El poder de los sitios estáticos modernos" data-category="Desarrollo Artículos">
             <span class="tag">Desarrollo</span>
             <h3>El poder de los sitios estáticos modernos</h3>
             <p>Por qué el desarrollo web minimalista está recuperando el trono frente a los frameworks pesados.</p>
             <span class="date">Hace 5 días</span>
           </article>
+
+          <!-- Tarjeta de ejemplo extra para probar películas o videos -->
+          <article class="card" data-title="Interestellar Reseña de Pelicula" data-category="Películas">
+            <span class="tag">Películas</span>
+            <h3>Interestellar: Una obra maestra</h3>
+            <p>Un viaje épico a través de agujeros de gusano que redefine el cine moderno de ciencia ficción.</p>
+            <span class="date">Hace 1 semana</span>
+          </article>
+
         </div>
+
+        <!-- Mensaje por si no hay resultados -->
+        <p id="noResults" style="display: none; text-align: center; color: var(--text-muted); margin-top: 2rem;">
+          No se encontraron resultados para tu búsqueda 🧊
+        </p>
       </section>
 
       <footer>
         <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
       </footer>
     </main>
+
+    <!-- Script de filtrado en tiempo real -->
+    <script>
+      const searchInput = document.getElementById('searchInput');
+      const cardsGrid = document.getElementById('cardsGrid');
+      const cards = cardsGrid.getElementsByClassName('card');
+      const noResults = document.getElementById('noResults');
+
+      searchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase().trim();
+        let visibleCount = 0;
+
+        Array.from(cards).forEach(card => {
+          const title = card.getAttribute('data-title').toLowerCase();
+          const category = card.getAttribute('data-category').toLowerCase();
+          const text = card.textContent.toLowerCase();
+
+          if (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm)) {
+            card.style.display = '';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
+        });
+
+        if (visibleCount === 0) {
+          noResults.style.display = 'block';
+        } else {
+          noResults.style.display = 'none';
+        }
+      });
+    </script>
   </body>
 </html>
 
@@ -120,6 +178,29 @@ const categorias = [
     font-size: 1.25rem;
     color: var(--text-main);
     text-decoration: none;
+  }
+
+  /* Estilos del Input de Búsqueda */
+  .search-box input {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    outline: none;
+    width: 200px;
+    transition: all 0.2s ease;
+  }
+
+  .search-box input:focus {
+    border-color: var(--accent);
+    width: 250px;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  .search-box input::placeholder {
+    color: var(--text-muted);
   }
 
   .nav-links {
@@ -253,11 +334,7 @@ const categorias = [
   }
 
   /* Footer */
-  footer {
-    text-align: center;
-    color: #64748b;
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border-color);
-    padding-top: 2rem;
-  }
+  <footer>
+    <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+  </footer>
 </style>
