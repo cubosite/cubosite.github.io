@@ -1,16 +1,263 @@
 ---
-// Página de bienvenida de Cubosite
+// Cubosite - Versión Dark & Modern con Categorías
+const titulo = "Cubosite 🧊";
+const categorias = [
+  { nombre: "Inicio", url: "#", activo: true },
+  { nombre: "Películas", url: "#peliculas" },
+  { nombre: "Videos", url: "#videos" },
+  { nombre: "Artículos", url: "#articulos" },
+  { nombre: "Noticias", url: "#noticias" }
+];
 ---
+
 <html lang="es">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <title>Cubosite 🧊</title>
+    <title>{titulo}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
-  <body style="font-family: sans-serif; text-align: center; margin-top: 20vh; background: #0f172a; color: #f8fafc;">
-    <h1>¡Bienvenido a Cubosite! 🧊</h1>
-    <p>Mi nuevo espacio personal impulsado por Astro, rápido y sin complicaciones.</p>
+  <body>
+    <!-- Barra de Navegación -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="#" class="logo">Cubosite 🧊</a>
+        <nav class="nav-links">
+          {categorias.map(cat => (
+            <a href={cat.url} class={cat.activo ? "active" : ""}>{cat.nombre}</a>
+          ))}
+        </nav>
+      </div>
+    </header>
+
+    <!-- Contenido Principal -->
+    <main class="container">
+      <section class="hero">
+        <span class="badge">Modo Dark Activado 🌙</span>
+        <h1>Bitácora y Exploración Digital</h1>
+        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
+        
+        <!-- Botón temporal para simular la gestión web -->
+        <div class="actions">
+          <a href="#admin" class="btn-primary" onclick="alert('Pronto conectaremos un panel de administración web (Decap CMS) para que puedas redactar artículos aquí mismo con un clic.'); return false;">
+            ✍️ Agregar Artículo Web
+          </a>
+        </div>
+      </section>
+
+      <!-- Secciones de Contenido -->
+      <section id="articulos" class="content-section">
+        <h2>Últimos Artículos</h2>
+        <div class="grid">
+          <article class="card">
+            <span class="tag">Tecnología</span>
+            <h3>Migrando de Jekyll a Astro en GitHub Pages</h3>
+            <p>Cómo eliminé los dolores de cabeza de las validaciones de commits y logré un despliegue limpio y veloz.</p>
+            <span class="date">Hace 2 días</span>
+          </article>
+
+          <article class="card">
+            <span class="tag">Desarrollo</span>
+            <h3>El poder de los sitios estáticos modernos</h3>
+            <p>Por qué el desarrollo web minimalista está recuperando el trono frente a los frameworks pesados.</p>
+            <span class="date">Hace 5 días</span>
+          </article>
+        </div>
+      </section>
+
+      <footer>
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+      </footer>
+    </main>
   </body>
 </html>
+
+<style>
+  :root {
+    --bg-base: #030712;        /* Negro profundo */
+    --bg-surface: #0b0f19;     /* Azul muy oscuro / casi negro */
+    --bg-card: #111827;        /* Azul grisáceo oscuro para tarjetas */
+    --border-color: #1e293b;   /* Bordes sutiles azulados */
+    --text-main: #f8fafc;      /* Blanco brillante */
+    --text-muted: #94a3b8;     /* Gris azulado apagado */
+    --accent: #38bdf8;         /* Azul cian brillante */
+    --accent-glow: rgba(56, 189, 248, 0.1);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Navbar */
+  .navbar {
+    background-color: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+  }
+
+  .nav-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--accent);
+  }
+
+  /* Container */
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  /* Hero */
+  .hero {
+    text-align: center;
+    margin-bottom: 4rem;
+  }
+
+  .badge {
+    background-color: var(--accent-glow);
+    color: var(--accent);
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin: 1.2rem 0 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+    line-height: 1.6;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, #0284c7, #0369a1);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    opacity: 0.95;
+  }
+
+  /* Sections */
+  .content-section {
+    margin-bottom: 4rem;
+  }
+
+  .content-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.4);
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+
+  .card h3 {
+    margin: 0.75rem 0 0.5rem;
+    font-size: 1.15rem;
+  }
+
+  .card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0 0 1rem;
+  }
+
+  .date {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  /* Footer */
+  footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+  }
+</style>
