@@ -1,18 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 
-// 1. Cargamos automáticamente todas las publicaciones de la carpeta posts
 const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const titulo = "Cubosite 🧊";
-const categorias = [
-  { nombre: "Inicio", url: "#", activo: true },
-  { nombre: "Películas", url: "#peliculas" },
-  { nombre: "Videos", url: "#videos" },
-  { nombre: "Artículos", url: "#articulos" },
-  { nombre: "Noticias", url: "#noticias" }
-];
 ---
 
 <html lang="es">
@@ -41,9 +33,11 @@ const categorias = [
         </div>
 
         <nav class="nav-links">
-          {categorias.map(cat => (
-            <a href={cat.url} class={cat.activo ? "active" : ""}>{cat.nombre}</a>
-          ))}
+          <a href="#" class="filter-btn active" data-category="todos">Inicio</a>
+          <a href="#peliculas" class="filter-btn" data-category="películas">Películas</a>
+          <a href="#videos" class="filter-btn" data-category="videos">Videos</a>
+          <a href="#articulos" class="filter-btn" data-category="artículos">Artículos</a>
+          <a href="#noticias" class="filter-btn" data-category="noticias">Noticias</a>
         </nav>
       </div>
     </header>
@@ -56,13 +50,13 @@ const categorias = [
         <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
 
-      <!-- Secciones de Contenido Dinámico -->
-      <section id="articulos" class="content-section">
-        <h2>Últimas Publicaciones</h2>
+      <!-- Secciones de Contenido Dinámico con Filtros -->
+      <section class="content-section">
+        <h2>Todas las Publicaciones</h2>
+        
         <div class="grid" id="cardsGrid">
-          
           {posts.map((post) => (
-            <article class="card" data-title={post.data.title} data-category={post.data.category}>
+            <article class="card" data-title={post.data.title} data-category={post.data.category.toLowerCase()}>
               <span class="tag">{post.data.category}</span>
               <h3>{post.data.title}</h3>
               <p>{post.data.description}</p>
@@ -71,12 +65,11 @@ const categorias = [
               </span>
             </article>
           ))}
-
         </div>
 
-        <!-- Mensaje si no hay resultados en la búsqueda -->
+        <!-- Mensaje si no hay resultados -->
         <p id="noResults" style="display: none; text-align: center; color: var(--text-muted); margin-top: 2rem;">
-          No se encontraron resultados para tu búsqueda 🧊
+          No se encontraron publicaciones en esta categoría 🧊
         </p>
       </section>
 
@@ -85,15 +78,36 @@ const categorias = [
       </footer>
     </main>
 
-    <!-- Script de filtrado en tiempo real -->
+    <!-- Script de filtrado por categoría y buscador -->
     <script>
       const searchInput = document.getElementById('searchInput');
-      const cardsGrid = document.getElementById('cardsGrid');
-      const cards = cardsGrid.getElementsByClassName('card');
+      const cards = document.getElementsByClassName('card');
+      const filterButtons = document.querySelectorAll('.filter-btn');
       const noResults = document.getElementById('noResults');
 
-      searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase().trim();
+      let currentCategory = 'todos';
+
+      // Filtrar por categoría al hacer clic en el menú
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          
+          // Cambiar clase activa visual
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+
+          currentCategory = btn.getAttribute('data-category');
+          filterCards();
+        });
+      });
+
+      // Filtrar al escribir en el buscador
+      searchInput.addEventListener('input', () => {
+        filterCards();
+      });
+
+      function filterCards() {
+        const searchTerm = searchInput.value.toLowerCase().trim();
         let visibleCount = 0;
 
         Array.from(cards).forEach(card => {
@@ -101,7 +115,10 @@ const categorias = [
           const category = card.getAttribute('data-category').toLowerCase();
           const text = card.textContent.toLowerCase();
 
-          if (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm)) {
+          const matchesCategory = (currentCategory === 'todos' || category.includes(currentCategory));
+          const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
+
+          if (matchesCategory && matchesSearch) {
             card.style.display = '';
             visibleCount++;
           } else {
@@ -114,7 +131,7 @@ const categorias = [
         } else {
           noResults.style.display = 'none';
         }
-      });
+      }
     </script>
   </body>
 </html>
@@ -200,6 +217,7 @@ const categorias = [
     font-size: 0.9rem;
     font-weight: 500;
     transition: color 0.2s ease;
+    cursor: pointer;
   }
 
   .nav-links a:hover, .nav-links a.active {
@@ -214,7 +232,7 @@ const categorias = [
 
   .hero {
     text-align: center;
-    margin-bottom: 4rem;
+    margin-bottom: 3rem;
   }
 
   .badge {
@@ -238,7 +256,7 @@ const categorias = [
     color: var(--text-muted);
     font-size: 1.1rem;
     max-width: 600px;
-    margin: 0 auto 2rem;
+    margin: 0 auto;
     line-height: 1.6;
   }
 
