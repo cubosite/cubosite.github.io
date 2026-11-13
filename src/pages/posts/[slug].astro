@@ -4,7 +4,7 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   return posts.map((post) => ({
-    params: { slug: post.slug || post.id },
+    params: { slug: post.slug },
     props: { post },
   }));
 }
@@ -26,7 +26,224 @@ const { Content } = await post.render();
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
         
-        <!-- Botón de regreso rápido -->
         <nav class="nav-links">
           <a href="/">← Volver al inicio</a>
         </nav>
+      </div>
+    </header>
+
+    <!-- Contenido Principal del Post -->
+    <main class="container">
+      
+      <!-- Panel superior: Selector de temas + Reloj e IP -->
+      <div class="hero-top-bar">
+        <div class="theme-switchers">
+          <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
+          <button class="theme-btn" data-theme-target="light">☀️ Gris Claro</button>
+          <button class="theme-btn" data-theme-target="green">🟢 Green</button>
+        </div>
+        
+        <div class="info-widget">
+          <span id="liveClock">🕒 Cargando...</span>
+          <span class="divider">|</span>
+          <span id="userIp">🌐 IP: Cargando...</span>
+        </div>
+      </div>
+
+      <article class="post-container">
+        <span class="tag">{post.data.category}</span>
+        <h1 class="post-title">{post.data.title}</h1>
+        <p class="date">
+          Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+        </p>
+
+        <div class="post-content">
+          <Content />
+        </div>
+
+        <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+          <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
+        </div>
+      </article>
+    </main>
+
+    <!-- Footer Avanzado en 3 Columnas -->
+    <footer class="footer-advanced">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>Cubosite 🧊</h3>
+          <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
+          <span class="footer-badge">Estado: 100% Operativo 🚀</span>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contacto & Enlaces</h4>
+          <ul>
+            <li><a href="/">📩 Soporte / Reportar Error</a></li>
+            <li><a href="https://github.com" target="_blank">🐙 Repositorio GitHub</a></li>
+            <li><a href="/">💡 Sugerir Contenido</a></li>
+            <li><a href="/">📜 Manual SKILL.md</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Actualizaciones</h4>
+          <p class="update-info">Última versión: <strong>v3.6</strong> (Nov 2026)</p>
+          <p style="font-size: 0.8rem; color: var(--text-muted);">Explora las colecciones desde el menú principal.</p>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- Script de Reloj, IP y Temas -->
+    <script>
+      function updateClock() {
+        const clockElement = document.getElementById('liveClock');
+        if (clockElement) {
+          const now = new Date();
+          const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+          clockElement.textContent = `🕒 ${timeString}`;
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      fetch('https://api.ipify.org?format=json')
+        .then(response => response.json())
+        .then(data => {
+          const ipElement = document.getElementById('userIp');
+          if (ipElement) {
+            ipElement.textContent = `🌐 IP: ${data.ip}`;
+          }
+        })
+        .catch(() => {
+          const ipElement = document.getElementById('userIp');
+          if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
+        });
+
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      themeButtons.forEach(btn => {
+        btn.addEventListener('click', () => {
+          themeButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          const targetTheme = btn.getAttribute('data-theme-target');
+          if (targetTheme) {
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('cubo-theme', targetTheme);
+          }
+        });
+      });
+
+      const savedTheme = localStorage.getItem('cubo-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeButtons.forEach(b => {
+          if (b.getAttribute('data-theme-target') === savedTheme) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #030712;
+    --bg-surface: #0b0f19;
+    --bg-card: #111827;
+    --border-color: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.1);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --bg-surface: #e2e8f0;
+    --bg-card: #ffffff;
+    --border-color: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+    --accent-glow: rgba(2, 132, 199, 0.1);
+  }
+
+  :root[data-theme="green"] {
+    --bg-base: #022c22;
+    --bg-surface: #064e3b;
+    --bg-card: #065f46;
+    --border-color: #047857;
+    --text-main: #ecfdf5;
+    --text-muted: #a7f3d0;
+    --accent: #34d399;
+    --accent-glow: rgba(52, 211, 153, 0.15);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  .navbar {
+    background-color: var(--bg-surface);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+  }
+
+  .nav-container {
+    max-width: 1150px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    text-decoration: none;
+  }
+
+  .nav-links a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+
+  .nav-links a:hover {
+    opacity: 0.8;
+  }
+
+  .container {
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 3rem 2rem;
+    flex: 1;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hero-
