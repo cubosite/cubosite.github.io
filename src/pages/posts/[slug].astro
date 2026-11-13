@@ -21,7 +21,7 @@ const { Content } = await post.render();
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación -->
+    <!-- Barra de Navegación con Categorías de Index -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
@@ -35,9 +35,16 @@ const { Content } = await post.render();
           />
         </div>
 
+        <!-- Categorías idénticas al Index -->
         <nav class="nav-links">
           <a href="/">Inicio</a>
-          <a href="/" class="active">← Volver</a>
+          <a href="/#terror" class="filter-btn" data-category="Terror">Terror</a>
+          <a href="/#comedia" class="filter-btn" data-category="Comedia">Comedia</a>
+          <a href="/#ficcion" class="filter-btn" data-category="Ficcion">Ficción</a>
+          <a href="/#drama" class="filter-btn" data-category="Drama">Drama</a>
+          <a href="/#accion" class="filter-btn" data-category="Accion">Acción</a>
+          <a href="/#suspenso" class="filter-btn" data-category="Suspenso">Suspenso</a>
+          <a href="/#archivos" class="filter-btn" data-category="+Archivos">+Archivos</a>
         </nav>
       </div>
     </header>
