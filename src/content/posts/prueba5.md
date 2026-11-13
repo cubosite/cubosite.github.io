@@ -1,5 +1,5 @@
 ---
-title: "otro articulo"
+title: "prueba 5"
 date: 2026-11-13
 category: "Terror"
 description: "Una pequeña descripción de lo que trata que aparecerá en la tarjeta oscura."
