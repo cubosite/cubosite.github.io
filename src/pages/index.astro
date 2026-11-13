@@ -37,7 +37,7 @@ const titulo = "Cubosite 🧊";
         <nav class="nav-links">
           <a href="#" class="filter-btn active" data-category="todos">Inicio</a>
           <a href="#peliculas" class="filter-btn" data-category="Peliculas">Películas</a>
-          <a href="#videos" class="filter-btn" data-category="videos">Videos</a>
+          <a href="#videos" class="filter-btn" data-category="Videos">Videos</a>
           <a href="#articulos" class="filter-btn" data-category="Articulos">Artículos</a>
           <a href="#noticias" class="filter-btn" data-category="Noticias">Noticias</a>
         </nav>
@@ -58,7 +58,7 @@ const titulo = "Cubosite 🧊";
         
         <div class="grid" id="cardsGrid">
           {posts.map((post) => (
-            <article class="card" data-title={post.data.title} data-category={post.data.category.toLowerCase()}>
+            <article class="card" data-title={post.data.title} data-category={post.data.category}>
               <span class="tag">{post.data.category}</span>
               <h3>
                 <a href={`/posts/${post.slug}`} class="card-link">
@@ -94,6 +94,11 @@ const titulo = "Cubosite 🧊";
 
       let currentCategory = 'todos';
 
+      // Función auxiliar para quitar tildes, minúsculas y limpiar espacios
+      function normalizeText(text: string) {
+        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
+      }
+
       // Filtrar por categoría al hacer clic en el menú
       filterButtons.forEach(btn => {
         btn.addEventListener('click', (e) => {
@@ -115,15 +120,16 @@ const titulo = "Cubosite 🧊";
       }
 
       function filterCards() {
-        const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+        const searchTerm = searchInput ? normalizeText(searchInput.value) : '';
         let visibleCount = 0;
 
         cards.forEach(card => {
-          const title = card.getAttribute('data-title')?.toLowerCase() || '';
-          const category = card.getAttribute('data-category')?.toLowerCase() || '';
-          const text = card.textContent?.toLowerCase() || '';
+          const title = normalizeText(card.getAttribute('data-title'));
+          const category = normalizeText(card.getAttribute('data-category'));
+          const text = normalizeText(card.textContent);
 
-          const matchesCategory = (currentCategory === 'todos' || category.includes(currentCategory));
+          const normCurrentCat = normalizeText(currentCategory);
+          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
           const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
 
           if (matchesCategory && matchesSearch) {
@@ -233,119 +239,3 @@ const titulo = "Cubosite 🧊";
   }
 
   .nav-links a:hover, .nav-links a.active {
-    color: var(--accent);
-  }
-
-  /* Container */
-  .container {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-  }
-
-  /* Hero */
-  .hero {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .badge {
-    background-color: var(--accent-glow);
-    color: var(--accent);
-    padding: 0.35rem 0.85rem;
-    border-radius: 9999px;
-    font-size: 0.8rem;
-    font-weight: 600;
-    border: 1px solid rgba(56, 189, 248, 0.2);
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    margin: 1.2rem 0 1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  .hero p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  /* Sections */
-  .content-section {
-    margin-bottom: 4rem;
-  }
-
-  .content-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-  }
-
-  .grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1.5rem;
-  }
-
-  .card {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 1.5rem;
-    border-radius: 0.75rem;
-    transition: transform 0.2s ease, border-color 0.2s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(56, 189, 248, 0.4);
-  }
-
-  .card-link {
-    color: var(--text-main);
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .card-link:hover {
-    color: var(--accent);
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    font-weight: 700;
-  }
-
-  .card h3 {
-    margin: 0.75rem 0 0.5rem;
-    font-size: 1.15rem;
-  }
-
-  .card p {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.5;
-    margin: 0 0 1rem;
-  }
-
-  .date {
-    font-size: 0.75rem;
-    color: #64748b;
-  }
-
-  /* Footer */
-  footer {
-    text-align: center;
-    color: #64748b;
-    font-size: 0.85rem;
-    border-top: 1px solid var(--border-color);
-    padding-top: 2rem;
-  }
-</style>
