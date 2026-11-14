@@ -146,7 +146,6 @@ const titulo = "Cubosite 🧊";
 
     <!-- Script de Reloj (12h sin segundos), Clima Dinámico, IP, Temas y Paginación -->
     <script is:inline>
-      // 1. Reloj en formato de 12 horas (sin segundos)
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
@@ -162,7 +161,6 @@ const titulo = "Cubosite 🧊";
       setInterval(updateClock, 1000);
       updateClock();
 
-      // 2. Clima dinámico real (Open-Meteo)
       async function obtenerClima() {
         try {
           const lat = 4.6097; 
@@ -206,7 +204,6 @@ const titulo = "Cubosite 🧊";
       }
       obtenerClima();
 
-      // 3. Obtener IP del usuario
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
@@ -220,7 +217,6 @@ const titulo = "Cubosite 🧊";
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
-      // 4. Selector de Temas
       const themeButtons = document.querySelectorAll('.theme-btn');
       themeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -246,7 +242,6 @@ const titulo = "Cubosite 🧊";
         });
       }
 
-      // --- PAGINACIÓN Y FILTRADO ---
       const searchInput = document.getElementById('searchInput');
       const searchInputBottom = document.getElementById('searchInputBottom');
       const cardsGrid = document.getElementById('cardsGrid');
@@ -373,14 +368,14 @@ const titulo = "Cubosite 🧊";
 
 <style>
   :root[data-theme="dark"] {
-    --bg-base: #030712;
+    --bg-base: #000000;
     --bg-surface: #0b0f19;
-    --bg-card: #111827;
-    --border-color: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-    --accent-glow: rgba(56, 189, 248, 0.1);
+    --bg-card: #141414;
+    --border-color: #222222;
+    --text-main: #ffffff;
+    --text-muted: #a1a1aa;
+    --accent: #aaff00;
+    --accent-glow: rgba(170, 255, 0, 0.15);
   }
 
   :root[data-theme="light"] {
@@ -440,7 +435,7 @@ const titulo = "Cubosite 🧊";
   .logo {
     font-weight: 700;
     font-size: 1.25rem;
-    color: var(--text-main);
+    color: var(--accent);
     text-decoration: none;
   }
 
@@ -477,7 +472,7 @@ const titulo = "Cubosite 🧊";
     color: var(--text-muted);
     text-decoration: none;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: color 0.2s ease;
     cursor: pointer;
   }
@@ -533,7 +528,7 @@ const titulo = "Cubosite 🧊";
 
   .theme-btn.active, .theme-btn:hover {
     background-color: var(--accent);
-    color: var(--bg-base);
+    color: #000000;
   }
 
   .info-widget {
@@ -558,6 +553,7 @@ const titulo = "Cubosite 🧊";
     font-size: 2.5rem;
     margin: 1.2rem 0 1rem;
     font-weight: 700;
+    color: var(--accent);
     letter-spacing: -0.02em;
   }
 
@@ -578,6 +574,8 @@ const titulo = "Cubosite 🧊";
     margin-bottom: 1.5rem;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 0.5rem;
+    color: var(--accent);
+    font-weight: 700;
   }
 
   .grid {
@@ -629,12 +627,13 @@ const titulo = "Cubosite 🧊";
   .card h3 {
     margin: 0 0 0.5rem;
     font-size: 1.1rem;
-    color: var(--text-main);
+    color: var(--accent);
+    font-weight: 700;
     transition: color 0.2s ease;
   }
 
   .card p {
-    color: var(--text-muted);
+    color: var(--text-main);
     font-size: 0.85rem;
     line-height: 1.5;
     margin: 0 0 1rem;
@@ -658,25 +657,25 @@ const titulo = "Cubosite 🧊";
   .page-btn {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    color: var(--text-main);
+    color: var(--accent);
+    font-weight: 700;
     padding: 0.6rem 1.25rem;
     border-radius: 9999px;
     font-size: 0.9rem;
-    font-weight: 600;
     cursor: pointer;
     transition: all 0.2s ease;
   }
 
   .page-btn:hover {
     background-color: var(--accent);
-    color: var(--bg-base);
+    color: #000000;
     border-color: var(--accent);
   }
 
   .page-info {
     color: var(--text-muted);
     font-size: 0.9rem;
-    font-weight: 500;
+    font-weight: 600;
   }
 
   .footer-advanced {
@@ -697,7 +696,8 @@ const titulo = "Cubosite 🧊";
   }
 
   .footer-col h3, .footer-col h4 {
-    color: var(--text-main);
+    color: var(--accent);
+    font-weight: 700;
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 1.1rem;
@@ -707,6 +707,7 @@ const titulo = "Cubosite 🧊";
     font-size: 0.85rem;
     line-height: 1.6;
     margin-bottom: 1rem;
+    color: var(--text-main);
   }
 
   .footer-col ul {
@@ -722,6 +723,7 @@ const titulo = "Cubosite 🧊";
   .footer-col ul li a {
     color: var(--text-muted);
     text-decoration: none;
+    font-weight: 600;
     font-size: 0.85rem;
     transition: color 0.2s ease;
   }
@@ -737,13 +739,14 @@ const titulo = "Cubosite 🧊";
     padding: 0.25rem 0.6rem;
     border-radius: 9999px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     border: 1px solid var(--border-color);
   }
 
   .update-info {
     font-size: 0.85rem;
     margin-bottom: 0.75rem;
+    color: var(--text-main);
   }
 
   .footer-search-box input {
@@ -771,5 +774,6 @@ const titulo = "Cubosite 🧊";
     padding-top: 1.5rem;
     text-align: center;
     font-size: 0.8rem;
+    color: var(--text-muted);
   }
 </style>
