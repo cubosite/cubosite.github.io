@@ -56,7 +56,7 @@ const titulo = "Cubosite 🧊";
             <button class="theme-btn" data-theme-target="green">🟢 Green</button>
           </div>
           
-          <!-- Widget con Hora (12h), Clima/Temperatura e IP -->
+          <!-- Widget unificado con Hora (12h), Clima/Temperatura e IP -->
           <div class="info-widget">
             <span id="liveClock">🕒 Cargando...</span>
             <span class="divider">|</span>
@@ -145,7 +145,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script con Reloj (12h), Clima, IP, Paginación y Temas -->
+    <!-- Script de Reloj (12h), Clima, IP, Paginación, Filtrado y Temas -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -162,7 +162,6 @@ const titulo = "Cubosite 🧊";
       setInterval(updateClock, 1000);
       updateClock();
 
-      // Obtener Clima y Temperatura automáticamente
       fetch('https://wttr.in/?format=%c+%t')
         .then(response => response.text())
         .then(weatherText => {
@@ -220,4 +219,61 @@ const titulo = "Cubosite 🧊";
       const searchInputBottom = document.getElementById('searchInputBottom');
       const cardsGrid = document.getElementById('cardsGrid');
       const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
-      const filterButtons = document.querySelectorAll
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const noResults = document.getElementById('noResults');
+      
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      const pageInfo = document.getElementById('pageInfo');
+
+      let currentCategory = 'todos';
+      let currentPage = 1;
+      const itemsPerPage = 24;
+
+      function normalizeText(text) {
+        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
+      }
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category') || 'todos';
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          if (searchInputBottom) searchInputBottom.value = searchInput.value;
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      }
+
+      if (searchInputBottom) {
+        searchInputBottom.addEventListener('input', () => {
+          if (searchInput) searchInput.value = searchInputBottom.value;
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          const termValue = searchInput ? searchInput.value : '';
+          const filteredCards = getFilteredCards(termValue);
+          const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
+          if
