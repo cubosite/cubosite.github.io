@@ -68,8 +68,8 @@ const { Content } = await post.render();
           </div>
         </div>
       
-       <h1>Bitácora y Exploración Digital</h1>
-       <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
+        <h1>Bitácora y Exploración Digital</h1>
+        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
 
       <!-- Tarjeta del Artículo -->
@@ -362,7 +362,7 @@ const { Content } = await post.render();
   .container {
     max-width: 1150px;
     margin: 0 auto;
-    padding: 2rem 2rem 4rem;
+    padding: 4rem 2rem;
     flex: 1;
     width: 100%;
     box-sizing: border-box;
@@ -370,13 +370,13 @@ const { Content } = await post.render();
 
   .hero {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .hero-top-bar {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 1.25rem;
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
@@ -425,6 +425,21 @@ const { Content } = await post.render();
   .info-widget .divider {
     color: var(--border-color);
     font-weight: 400;
+  }
+
+  .hero h1 {
+    font-size: 2.5rem;
+    margin: 1.2rem 0 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
   }
 
   .content-section {
