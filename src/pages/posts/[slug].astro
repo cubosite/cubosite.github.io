@@ -11,21 +11,26 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
+
+const titulo = "Cubosite 🧊";
 ---
 
 <html lang="es" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{post.data.title} - Cubosite 🧊</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{post.data.title} - {titulo}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación con Categorías de Index -->
+    <!-- Barra de Navegación idéntica al Index -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
         
+        <!-- Buscador integrado -->
         <div class="search-box">
           <input 
             type="text" 
@@ -35,7 +40,7 @@ const { Content } = await post.render();
           />
         </div>
 
-        <!-- Categorías idénticas al Index -->
+        <!-- Filtros por categoría idénticos al Index -->
         <nav class="nav-links">
           <a href="/">Inicio</a>
           <a href="/#terror" class="filter-btn" data-category="Terror">Terror</a>
@@ -49,7 +54,7 @@ const { Content } = await post.render();
       </div>
     </header>
 
-    <!-- Contenido Principal -->
+    <!-- Contenido Principal idéntico al Index -->
     <main class="container">
       <section class="hero">
         <div class="hero-top-bar">
@@ -60,21 +65,23 @@ const { Content } = await post.render();
           </div>
           
           <div class="info-widget">
-            <span id="liveClock">🕒 Cargando...</span>
+            <span id="liveClock">🕒 Cargando hora...</span>
             <span class="divider">|</span>
             <span id="userIp">🌐 IP: Cargando...</span>
           </div>
         </div>
-      
-       <h1>Bitácora y Exploración Digital</h1>
-       <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
+
+        <!-- Título y subtítulo idénticos al index.astro -->
+        <h1>Bitácora y Exploración Digital</h1>
+        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
 
-      <!-- Tarjeta del Artículo -->
+      <!-- Sección de Contenido Dinámico del Artículo manteniendo la misma maquetación -->
       <section class="content-section">
-        <article class="post-container">
+        <h2>{post.data.title}</h2>
+        
+        <div class="post-container">
           <span class="tag">{post.data.category}</span>
-          <h1 class="post-title">{post.data.title}</h1>
           <p class="date">
             Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
@@ -86,19 +93,22 @@ const { Content } = await post.render();
           <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
             <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
           </div>
-        </article>
+        </div>
       </section>
     </main>
 
-    <!-- Footer Avanzado en 3 Columnas -->
+    <!-- Footer Avanzado en 3 Columnas idéntico al Index -->
     <footer class="footer-advanced">
       <div class="footer-container">
+        
+        <!-- Columna 1 -->
         <div class="footer-col">
           <h3>Cubosite 🧊</h3>
           <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
           <span class="footer-badge">Estado: 100% Operativo 🚀</span>
         </div>
 
+        <!-- Columna 2 -->
         <div class="footer-col">
           <h4>Contacto & Enlaces</h4>
           <ul>
@@ -109,9 +119,10 @@ const { Content } = await post.render();
           </ul>
         </div>
 
+        <!-- Columna 3 -->
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.6 Post</strong></p>
+          <p class="update-info">Versión: <strong>v3.6 Paginada</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -122,6 +133,7 @@ const { Content } = await post.render();
             />
           </div>
         </div>
+
       </div>
 
       <div class="footer-bottom">
@@ -129,7 +141,7 @@ const { Content } = await post.render();
       </div>
     </footer>
 
-    <!-- Script de Temas, Reloj, IP y redirección -->
+    <!-- Script de Temas, Reloj, IP y redirección de búsqueda -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -313,7 +325,7 @@ const { Content } = await post.render();
   .container {
     max-width: 1150px;
     margin: 0 auto;
-    padding: 2rem 2rem 4rem;
+    padding: 4rem 2rem;
     flex: 1;
     width: 100%;
     box-sizing: border-box;
@@ -321,13 +333,13 @@ const { Content } = await post.render();
 
   .hero {
     text-align: center;
-    margin-bottom: 2rem;
+    margin-bottom: 3rem;
   }
 
   .hero-top-bar {
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: stretch;
     gap: 1.25rem;
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
@@ -378,16 +390,39 @@ const { Content } = await post.render();
     font-weight: 400;
   }
 
+  h1 {
+    font-size: 2.5rem;
+    margin: 1.2rem 0 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
   .content-section {
     max-width: 900px;
     margin: 0 auto;
+    margin-bottom: 2rem;
+  }
+
+  .content-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
   }
 
   .post-container {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 0.75rem;
     padding: 2.5rem;
+    border-radius: 0.75rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
     box-sizing: border-box;
   }
@@ -404,14 +439,6 @@ const { Content } = await post.render();
     border: 1px solid var(--border-color);
     display: inline-block;
     margin-bottom: 0.75rem;
-  }
-
-  .post-title {
-    font-size: 2.25rem;
-    margin: 0 0 0.5rem;
-    font-weight: 700;
-    color: var(--text-main);
-    letter-spacing: -0.02em;
   }
 
   .date {
