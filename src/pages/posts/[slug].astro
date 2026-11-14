@@ -155,12 +155,6 @@ const readingTime = Math.ceil(wordCount / 200);
       </section>
     </main>
 
-    <!-- Botón Flotante de Teletransporte y Glitch -->
-    <button id="teleportBtn" class="teleport-float-btn" title="¡Teletransporte aleatorio! 🎲">
-      🎲 Teletransporte
-    </button>
-    <div id="glitchOverlay" class="glitch-overlay"></div>
-
     <!-- Footer Avanzado -->
     <footer class="footer-advanced">
       <div class="footer-container">
@@ -182,7 +176,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v4.3 Slug Fix</strong></p>
+          <p class="update-info">Versión: <strong>v3.8 Sizer + Post</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -200,8 +194,9 @@ const readingTime = Math.ceil(wordCount / 200);
       </div>
     </footer>
 
-    <!-- Scripts del Post -->
+    <!-- Scripts -->
     <script>
+      // 1. Reloj
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
@@ -213,6 +208,7 @@ const readingTime = Math.ceil(wordCount / 200);
       setInterval(updateClock, 1000);
       updateClock();
 
+      // 2. Clima Open-Meteo
       async function obtenerClima() {
         try {
           const lat = 4.6097; const lon = -74.0817;
@@ -235,6 +231,7 @@ const readingTime = Math.ceil(wordCount / 200);
       }
       obtenerClima();
 
+      // 3. IP
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
@@ -246,6 +243,7 @@ const readingTime = Math.ceil(wordCount / 200);
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
+      // 4. Barra de Progreso de Lectura
       window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -254,6 +252,7 @@ const readingTime = Math.ceil(wordCount / 200);
         if (progressBar) progressBar.style.width = scrolled + '%';
       });
 
+      // 5. Selector de Tamaño de Texto (A- / Normal / A+)
       const contentArea = document.getElementById('postContentArea');
       const fontDec = document.getElementById('fontDecrease');
       const fontRes = document.getElementById('fontReset');
@@ -277,6 +276,7 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
+      // 6. Reacciones con Cubitos 🧊
       const postSlug = window.location.pathname;
       const likeKey = `cubo_likes_${postSlug}`;
       let currentLikes = parseInt(localStorage.getItem(likeKey)) || 12;
@@ -294,6 +294,7 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
+      // 7. Botón Copiar Enlace
       const shareBtn = document.getElementById('shareBtn');
       const copyToast = document.getElementById('copyToast');
       if (shareBtn) {
@@ -306,6 +307,7 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
+      // 8. Temas
       const themeButtons = document.querySelectorAll('.theme-btn');
       themeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -337,28 +339,6 @@ const readingTime = Math.ceil(wordCount / 200);
       }
       if (searchInput) searchInput.addEventListener('keypress', redirectToHomeSearch);
       if (searchInputBottom) searchInputBottom.addEventListener('keypress', redirectToHomeSearch);
-
-      const teleportBtn = document.getElementById('teleportBtn');
-      const glitchOverlay = document.getElementById('glitchOverlay');
-
-      if (teleportBtn) {
-        teleportBtn.addEventListener('click', () => {
-          const postLinks = Array.from(document.querySelectorAll('a[href*="/posts/"]'))
-            .map(a => a.getAttribute('href'));
-
-          if (postLinks.length === 0) {
-            window.location.href = '/';
-            return;
-          }
-
-          const randomUrl = postLinks[Math.floor(Math.random() * postLinks.length)];
-          if (glitchOverlay) glitchOverlay.classList.add('glitch-active');
-
-          setTimeout(() => {
-            window.location.href = randomUrl;
-          }, 320);
-        });
-      }
     </script>
   </body>
 </html>
