@@ -1,5 +1,4 @@
 ---
-// Configuración y metadatos de la página
 const titulo = "Cubosite - Bitácora y Exploración Digital";
 ---
 
@@ -69,33 +68,99 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 			font-size: 1.1rem;
 			text-align: center;
 			max-width: 600px;
+			margin-bottom: 2.5rem;
+		}
+
+		/* Categorías organizadas en cuadrícula de 3 columnas */
+		.categories-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 1.25rem;
+			width: 100%;
+			max-width: 750px;
 			margin-bottom: 3rem;
 		}
 
-		.categories-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-			gap: 1rem;
-			width: 100%;
-			max-width: 800px;
+		@media (max-width: 768px) {
+			.categories-grid {
+				grid-template-columns: repeat(2, 1fr);
+			}
 		}
 
 		.category-card {
 			background: var(--card-bg);
 			border: 1px solid rgba(255, 255, 255, 0.08);
-			padding: 1.5rem;
+			padding: 1.25rem;
 			border-radius: 1rem;
 			text-align: center;
 			text-decoration: none;
 			color: white;
 			font-weight: 600;
 			transition: all 0.2s ease-in-out;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 0.5rem;
 		}
 
 		.category-card:hover {
 			background: rgba(255, 255, 255, 0.12);
 			transform: translateY(-3px);
 			border-color: var(--accent);
+		}
+
+		/* Sección de Artículos Recientes */
+		.section-container {
+			width: 100%;
+			max-width: 750px;
+			margin-bottom: 3rem;
+		}
+
+		.section-title {
+			font-size: 1.5rem;
+			font-weight: 700;
+			margin-bottom: 1rem;
+			border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+			padding-bottom: 0.5rem;
+		}
+
+		.article-card {
+			background: var(--card-bg);
+			border: 1px solid rgba(255, 255, 255, 0.08);
+			padding: 1rem 1.25rem;
+			border-radius: 0.75rem;
+			margin-bottom: 0.75rem;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			text-decoration: none;
+			color: white;
+			transition: background 0.2s;
+		}
+
+		.article-card:hover {
+			background: rgba(255, 255, 255, 0.1);
+		}
+
+		.article-title {
+			font-weight: 500;
+		}
+
+		.article-date {
+			color: var(--text-muted);
+			font-size: 0.85rem;
+		}
+
+		/* Footer */
+		footer {
+			margin-top: auto;
+			color: var(--text-muted);
+			font-size: 0.85rem;
+			text-align: center;
+			padding-top: 2rem;
+			border-top: 1px solid rgba(255, 255, 255, 0.05);
+			width: 100%;
+			max-width: 750px;
 		}
 	</style>
 </head>
@@ -120,7 +185,7 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 	<h1 class="main-title">Bitácora y Exploración Digital</h1>
 	<p class="subtitle">Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
 
-	<!-- Categorías del sitio -->
+	<!-- Categorías del sitio (Ordenadas correctamente) -->
 	<div class="categories-grid">
 		<a href="/" class="category-card">🏠 Inicio</a>
 		<a href="/peliculas" class="category-card">🎬 Películas</a>
@@ -130,9 +195,28 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 		<a href="/novedades" class="category-card">🚀 Novedades</a>
 	</div>
 
-	<!-- Script limpio optimizado para Astro -->
+	<!-- Sección de Artículos / Publicaciones Recientes -->
+	<div class="section-container">
+		<h2 class="section-title">📌 Artículos Recientes</h2>
+		
+		<a href="/articulos/bienvenida" class="article-card">
+			<span class="article-title">✨ Bienvenidos a Cubosite: El inicio de la bitácora</span>
+			<span class="article-date">Nov 13, 2026</span>
+		</a>
+
+		<a href="/articulos/exploracion" class="article-card">
+			<span class="article-title">🛠️ Configurando herramientas libres y descentralizadas</span>
+			<span class="article-date">Nov 10, 2026</span>
+		</a>
+	</div>
+
+	<!-- Footer -->
+	<footer>
+		<p>© 2026 Cubosite — Creado de forma independiente por Cubo 🧊. Todos los derechos reservados.</p>
+	</footer>
+
+	<!-- Script de Hora, IP y Clima -->
 	<script is:inline>
-		// 1. Reloj en tiempo real
 		function actualizarReloj() {
 			const ahora = new Date();
 			const elReloj = document.getElementById('reloj');
@@ -143,7 +227,6 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 		setInterval(actualizarReloj, 1000);
 		actualizarReloj();
 
-		// 2. Obtener IP del usuario
 		fetch('https://api.ipify.org?format=json')
 			.then(function(response) { return response.json(); })
 			.then(function(data) {
@@ -159,7 +242,6 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 				}
 			});
 
-		// 3. Clima dinámico real
 		async function obtenerClima() {
 			try {
 				const lat = 4.6097;
