@@ -142,27 +142,52 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Paginación, Filtrado, Temas, Reloj e IP (Sin errores de TS) -->
-    <script>
-      function updateClock() {
-        const clockElement = document.getElementById('liveClock');
-        if (clockElement) {
-          const now = new Date();
-          const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
-          clockElement.textContent = `🕒 ${timeString}`;
-        }
-      }
-      setInterval(updateClock, 1000);
-      updateClock();
+    // Reloj en formato de 12 horas con AM/PM
+function updateClock() {
+  const clockElement = document.getElementById('liveClock');
+  if (clockElement) {
+    const now = new Date();
+    const timeString = now.toLocaleTimeString('es-ES', { 
+      hour: '2-digit', 
+      minute: '2-digit',
+      hour12: true 
+    });
+    clockElement.textContent = `🕒 ${timeString}`;
+  }
+}
+setInterval(updateClock, 1000);
+updateClock();
 
-      fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-          const ipElement = document.getElementById('userIp');
-          if (ipElement) {
-            ipElement.textContent = `🌐 IP: ${data.ip}`;
-          }
-        })
+// Obtener Clima y Temperatura automáticamente según la IP
+fetch('https://wttr.in/?format=%c+%t')
+  .then(response => response.text())
+  .then(weatherText => {
+    const weatherElement = document.getElementById('weatherWidget');
+    if (weatherElement && !weatherText.includes('<html>')) {
+      weatherElement.textContent = `🌡️ ${weatherText.trim()}`;
+    } else {
+      throw new Error();
+    }
+  })
+  .catch(() => {
+    const weatherElement = document.getElementById('weatherWidget');
+    if (weatherElement) weatherElement.textContent = `🌡️ Clima no disponible`;
+  });
+
+// Obtener IP del usuario
+fetch('https://api.ipify.org?format=json')
+  .then(response => response.json())
+  .then(data => {
+    const ipElement = document.getElementById('userIp');
+    if (ipElement) {
+      ipElement.textContent = `🌐 IP: ${data.ip}`;
+    }
+  })
+  .catch(() => {
+    const ipElement = document.getElementById('userIp');
+    if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
+  });
+    
         .catch(() => {
           const ipElement = document.getElementById('userIp');
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
