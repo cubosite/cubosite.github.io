@@ -71,7 +71,7 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 			margin-bottom: 2.5rem;
 		}
 
-		/* Categorías organizadas en cuadrícula de 3 columnas */
+		/* Categorías del sitio */
 		.categories-grid {
 			display: grid;
 			grid-template-columns: repeat(3, 1fr);
@@ -157,8 +157,8 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 			color: var(--text-muted);
 			font-size: 0.85rem;
 			text-align: center;
-			padding-top: 2rem;
-			border-top: 1px solid rgba(255, 255, 255, 0.05);
+			padding: 1.5rem 0;
+			border-top: 1px solid rgba(255, 255, 255, 0.08);
 			width: 100%;
 			max-width: 750px;
 		}
@@ -185,7 +185,7 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 	<h1 class="main-title">Bitácora y Exploración Digital</h1>
 	<p class="subtitle">Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
 
-	<!-- Categorías del sitio (Ordenadas correctamente) -->
+	<!-- Categorías del sitio -->
 	<div class="categories-grid">
 		<a href="/" class="category-card">🏠 Inicio</a>
 		<a href="/peliculas" class="category-card">🎬 Películas</a>
@@ -195,7 +195,7 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 		<a href="/novedades" class="category-card">🚀 Novedades</a>
 	</div>
 
-	<!-- Sección de Artículos / Publicaciones Recientes -->
+	<!-- Sección de Artículos Recientes -->
 	<div class="section-container">
 		<h2 class="section-title">📌 Artículos Recientes</h2>
 		
@@ -210,12 +210,12 @@ const titulo = "Cubosite - Bitácora y Exploración Digital";
 		</a>
 	</div>
 
-	<!-- Footer -->
+	<!-- Footer completo -->
 	<footer>
 		<p>© 2026 Cubosite — Creado de forma independiente por Cubo 🧊. Todos los derechos reservados.</p>
 	</footer>
 
-	<!-- Script de Hora, IP y Clima -->
+	<!-- Script en tiempo real -->
 	<script is:inline>
 		function actualizarReloj() {
 			const ahora = new Date();
