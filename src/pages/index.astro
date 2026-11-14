@@ -193,30 +193,9 @@ fetch('https://api.ipify.org?format=json')
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
-      const themeButtons = document.querySelectorAll('.theme-btn');
-      themeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          themeButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const targetTheme = btn.getAttribute('data-theme-target');
-          if (targetTheme) {
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('cubo-theme', targetTheme);
-          }
-        });
-      });
+     
 
-      const savedTheme = localStorage.getItem('cubo-theme');
-      if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeButtons.forEach(b => {
-          if (b.getAttribute('data-theme-target') === savedTheme) {
-            b.classList.add('active');
-          } else {
-            b.classList.remove('active');
-          }
-        });
-      }
+    
 
       // --- PAGINACIÓN Y FILTRADO ---
       const searchInput = document.getElementById('searchInput');
