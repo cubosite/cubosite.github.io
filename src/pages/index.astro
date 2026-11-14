@@ -56,9 +56,11 @@ const titulo = "Cubosite 🧊";
             <button class="theme-btn" data-theme-target="green">🟢 Green</button>
           </div>
           
-          <!-- Widget con Hora (12h) e IP -->
+          <!-- Widget definitivo con Hora (12h) + Clima/Temperatura + IP -->
           <div class="info-widget">
             <span id="liveClock">🕒 Cargando hora...</span>
+            <span class="divider">|</span>
+            <span id="weatherWidget">🌤️ 22°C Parcial</span>
             <span class="divider">|</span>
             <span id="userIp">🌐 IP: Cargando...</span>
           </div>
@@ -143,7 +145,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script principal optimizado y seguro -->
+    <!-- Script optimizado y seguro para GitHub Actions -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -154,6 +156,17 @@ const titulo = "Cubosite 🧊";
       }
       setInterval(updateClock, 1000);
       updateClock();
+
+      // Carga asíncrona segura del clima real adaptada por geolocalización o IP del cliente
+      fetch('https://wttr.in/?format=%c+%t')
+        .then(res => res.text())
+        .then(text => {
+          if (text && !text.includes('<') && text.trim().length < 15) {
+            const wEl = document.getElementById('weatherWidget');
+            if (wEl) wEl.textContent = `🌡️ ${text.trim()}`;
+          }
+        })
+        .catch(() => {});
 
       fetch('https://api.ipify.org?format=json')
         .then(res => res.json())
