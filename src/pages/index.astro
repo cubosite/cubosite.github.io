@@ -144,7 +144,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script con Reloj 12h (sin segundos), Clima Dinámico real, IP, Temas y Paginación -->
+    <!-- Script de Reloj (12h sin segundos), Clima Dinámico, IP, Temas y Paginación -->
     <script is:inline>
       // 1. Reloj en formato de 12 horas (sin segundos)
       function updateClock() {
@@ -165,7 +165,7 @@ const titulo = "Cubosite 🧊";
       // 2. Clima dinámico real (Open-Meteo)
       async function obtenerClima() {
         try {
-          const lat = 4.6097; // Puedes ajustar tus coordenadas
+          const lat = 4.6097; 
           const lon = -74.0817;
           const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
           const data = await res.json();
@@ -181,11 +181,3 @@ const titulo = "Cubosite 🧊";
             icono = "🌧️";
           } else if (code >= 71 && code <= 77) {
             condicion = "Nevando";
-            icono = "❄️";
-          } else if (code >= 95) {
-            condicion = "Tormenta";
-            icono = "⚡";
-          } else if (code >= 1 && code <= 3) {
-            condicion = "Nublado";
-            icono = "☁️";
-          } else if (code === 45 || code === 48) {
