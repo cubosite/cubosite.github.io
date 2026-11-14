@@ -124,7 +124,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.14 Estilos Reparados</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v3.15 Base + Progress</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -153,4 +153,42 @@ const titulo = "Cubosite 🧊";
             minute: '2-digit', 
             hour12: true 
           });
-          clockElement.textContent =
+          clockElement.textContent = `🕒 ${timeString}`;
+        }
+      }
+      setInterval(updateClock, 1000);
+      updateClock();
+
+      async function obtenerClima() {
+        try {
+          const lat = 4.6097; 
+          const lon = -74.0817;
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+          const data = await res.json();
+          
+          const temp = Math.round(data.current_weather.temperature);
+          const code = data.current_weather.weathercode;
+
+          let condicion = "Despejado";
+          let icono = "☀️";
+
+          if (code >= 51 && code <= 67) {
+            condicion = "Lluvioso";
+            icono = "🌧️";
+          } else if (code >= 71 && code <= 77) {
+            condicion = "Nevando";
+            icono = "❄️";
+          } else if (code >= 95) {
+            condicion = "Tormenta";
+            icono = "⚡";
+          } else if (code >= 1 && code <= 3) {
+            condicion = "Nublado";
+            icono = "☁️";
+          } else if (code === 45 || code === 48) {
+            condicion = "Neblina";
+            icono = "🌫️";
+          }
+
+          const elClima = document.getElementById('widget-clima');
+          if (elClima) {
+            elClima
