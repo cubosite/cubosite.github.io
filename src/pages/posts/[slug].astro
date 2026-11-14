@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import '../../styles/global.css'; // <-- Añade esta línea arriba
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
@@ -341,14 +342,3 @@ const readingTime = Math.ceil(wordCount / 200);
     </script>
   </body>
 </html>
-
-
----
-import { getCollection } from 'astro:content';
-import '../styles/global.css'; // <-- Importación global indestructible
-
-const posts = await getCollection('posts');
-posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-const titulo = "Cubosite 🧊";
----
