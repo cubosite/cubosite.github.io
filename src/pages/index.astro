@@ -17,6 +17,9 @@ const titulo = "Cubosite 🧊";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
+    <!-- Barra de Progreso de Lectura -->
+    <div id="readingProgress" class="reading-progress"></div>
+
     <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
@@ -100,6 +103,12 @@ const titulo = "Cubosite 🧊";
       </section>
     </main>
 
+    <!-- Botón Flotante de Teletransporte y Glitch -->
+    <button id="teleportBtn" class="teleport-float-btn" title="¡Teletransporte aleatorio! 🎲">
+      🎲 Teletransporte
+    </button>
+    <div id="glitchOverlay" class="glitch-overlay"></div>
+
     <!-- Footer Avanzado -->
     <footer class="footer-advanced">
       <div class="footer-container">
@@ -121,7 +130,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.7 Avanzada</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v4.1 Teleport Master</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -139,17 +148,13 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Reloj, Clima Dinámico, IP, Temas y Paginación -->
+    <!-- Script General -->
     <script is:inline>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
           const now = new Date();
-          const timeString = now.toLocaleTimeString('es-ES', { 
-            hour: 'numeric', 
-            minute: '2-digit', 
-            hour12: true 
-          });
+          const timeString = now.toLocaleTimeString('es-ES', { hour: 'numeric', minute: '2-digit', hour12: true });
           clockElement.textContent = `🕒 ${timeString}`;
         }
       }
@@ -158,43 +163,22 @@ const titulo = "Cubosite 🧊";
 
       async function obtenerClima() {
         try {
-          const lat = 4.6097; 
-          const lon = -74.0817;
+          const lat = 4.6097; const lon = -74.0817;
           const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
           const data = await res.json();
-          
           const temp = Math.round(data.current_weather.temperature);
           const code = data.current_weather.weathercode;
-
-          let condicion = "Despejado";
-          let icono = "☀️";
-
-          if (code >= 51 && code <= 67) {
-            condicion = "Lluvioso";
-            icono = "🌧️";
-          } else if (code >= 71 && code <= 77) {
-            condicion = "Nevando";
-            icono = "❄️";
-          } else if (code >= 95) {
-            condicion = "Tormenta";
-            icono = "⚡";
-          } else if (code >= 1 && code <= 3) {
-            condicion = "Nublado";
-            icono = "☁️";
-          } else if (code === 45 || code === 48) {
-            condicion = "Neblina";
-            icono = "🌫️";
-          }
-
+          let condicion = "Despejado", icono = "☀️";
+          if (code >= 51 && code <= 67) { condicion = "Lluvioso"; icono = "🌧️"; }
+          else if (code >= 71 && code <= 77) { condicion = "Nevando"; icono = "❄️"; }
+          else if (code >= 95) { condicion = "Tormenta"; icono = "⚡"; }
+          else if (code >= 1 && code <= 3) { condicion = "Nublado"; icono = "☁️"; }
+          else if (code === 45 || code === 48) { condicion = "Neblina"; icono = "🌫️"; }
           const elClima = document.getElementById('widget-clima');
-          if (elClima) {
-            elClima.textContent = `${icono} ${temp}°C ${condicion}`;
-          }
+          if (elClima) elClima.textContent = `${icono} ${temp}°C ${condicion}`;
         } catch (e) {
           const elClima = document.getElementById('widget-clima');
-          if (elClima) {
-            elClima.textContent = "⛅ Clima no disponible";
-          }
+          if (elClima) elClima.textContent = "⛅ Clima no disponible";
         }
       }
       obtenerClima();
@@ -203,14 +187,20 @@ const titulo = "Cubosite 🧊";
         .then(response => response.json())
         .then(data => {
           const ipElement = document.getElementById('userIp');
-          if (ipElement) {
-            ipElement.textContent = `🌐 IP: ${data.ip}`;
-          }
+          if (ipElement) ipElement.textContent = `🌐 IP: ${data.ip}`;
         })
         .catch(() => {
           const ipElement = document.getElementById('userIp');
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
+
+      window.addEventListener('scroll', () => {
+        const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
+        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const scrolled = (winScroll / height) * 100;
+        const progressBar = document.getElementById('readingProgress');
+        if (progressBar) progressBar.style.width = scrolled + '%';
+      });
 
       const themeButtons = document.querySelectorAll('.theme-btn');
       themeButtons.forEach(btn => {
@@ -229,11 +219,8 @@ const titulo = "Cubosite 🧊";
       if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
         themeButtons.forEach(b => {
-          if (b.getAttribute('data-theme-target') === savedTheme) {
-            b.classList.add('active');
-          } else {
-            b.classList.remove('active');
-          }
+          if (b.getAttribute('data-theme-target') === savedTheme) b.classList.add('active');
+          else b.classList.remove('active');
         });
       }
 
@@ -335,9 +322,7 @@ const titulo = "Cubosite 🧊";
         const endIndex = startIndex + itemsPerPage;
         const cardsToShow = filteredCards.slice(startIndex, endIndex);
 
-        cardsToShow.forEach(card => {
-          card.style.display = 'block';
-        });
+        cardsToShow.forEach(card => { card.style.display = 'block'; });
 
         if (noResults) {
           noResults.style.display = filteredCards.length === 0 ? 'block' : 'none';
@@ -357,6 +342,29 @@ const titulo = "Cubosite 🧊";
       }
 
       filterAndPaginate();
+
+      // Script de Teletransporte Aleatorio con Glitch 🎲
+      const teleportBtn = document.getElementById('teleportBtn');
+      const glitchOverlay = document.getElementById('glitchOverlay');
+
+      if (teleportBtn) {
+        teleportBtn.addEventListener('click', () => {
+          const postLinks = Array.from(document.querySelectorAll('a[href*="/posts/"]'))
+            .map(a => a.getAttribute('href'));
+
+          if (postLinks.length === 0) {
+            window.location.href = '/';
+            return;
+          }
+
+          const randomUrl = postLinks[Math.floor(Math.random() * postLinks.length)];
+          if (glitchOverlay) glitchOverlay.classList.add('glitch-active');
+
+          setTimeout(() => {
+            window.location.href = randomUrl;
+          }, 320);
+        });
+      }
     </script>
   </body>
 </html>
@@ -405,6 +413,17 @@ const titulo = "Cubosite 🧊";
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+  }
+
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background-color: var(--accent);
+    width: 0%;
+    z-index: 1000;
+    transition: width 0.1s ease-out;
   }
 
   .navbar {
@@ -671,6 +690,55 @@ const titulo = "Cubosite 🧊";
     color: var(--text-muted);
     font-size: 0.9rem;
     font-weight: 600;
+  }
+
+  /* Estilos botón Teletransporte y Glitch */
+  .teleport-float-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    background-color: var(--accent);
+    color: #000000;
+    border: none;
+    padding: 0.75rem 1.25rem;
+    border-radius: 9999px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 4px 15px var(--accent-glow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .teleport-float-btn:hover {
+    transform: scale(1.08) rotate(-2deg);
+    box-shadow: 0 0 20px var(--accent);
+  }
+
+  .glitch-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(170, 255, 0, 0.2);
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0;
+    mix-blend-mode: difference;
+  }
+
+  @keyframes glitchAnim {
+    0% { transform: translate(0); opacity: 1; filter: hue-rotate(0deg); }
+    20% { transform: translate(-12px, 6px); filter: hue-rotate(90deg); }
+    40% { transform: translate(12px, -6px); filter: hue-rotate(180deg); }
+    60% { transform: translate(-6px, -12px); filter: hue-rotate(270deg); }
+    80% { transform: translate(6px, 12px); filter: hue-rotate(360deg); }
+    100% { transform: translate(0); opacity: 0; }
+  }
+
+  .glitch-active {
+    animation: glitchAnim 0.35s steps(2, end) forwards;
   }
 
   .footer-advanced {
