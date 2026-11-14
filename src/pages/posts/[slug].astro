@@ -155,6 +155,12 @@ const readingTime = Math.ceil(wordCount / 200);
       </section>
     </main>
 
+    <!-- Botón Flotante de Teletransporte y Glitch -->
+    <button id="teleportBtn" class="teleport-float-btn" title="¡Teletransporte aleatorio! 🎲">
+      🎲 Teletransporte
+    </button>
+    <div id="glitchOverlay" class="glitch-overlay"></div>
+
     <!-- Footer Avanzado -->
     <footer class="footer-advanced">
       <div class="footer-container">
@@ -176,7 +182,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.8 Sizer + Post</strong></p>
+          <p class="update-info">Versión: <strong>v4.4 Post Container Fix</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -194,9 +200,8 @@ const readingTime = Math.ceil(wordCount / 200);
       </div>
     </footer>
 
-    <!-- Scripts -->
+    <!-- Scripts del Post -->
     <script>
-      // 1. Reloj
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
@@ -208,7 +213,6 @@ const readingTime = Math.ceil(wordCount / 200);
       setInterval(updateClock, 1000);
       updateClock();
 
-      // 2. Clima Open-Meteo
       async function obtenerClima() {
         try {
           const lat = 4.6097; const lon = -74.0817;
@@ -231,7 +235,6 @@ const readingTime = Math.ceil(wordCount / 200);
       }
       obtenerClima();
 
-      // 3. IP
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
@@ -243,7 +246,6 @@ const readingTime = Math.ceil(wordCount / 200);
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
-      // 4. Barra de Progreso de Lectura
       window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -252,7 +254,6 @@ const readingTime = Math.ceil(wordCount / 200);
         if (progressBar) progressBar.style.width = scrolled + '%';
       });
 
-      // 5. Selector de Tamaño de Texto (A- / Normal / A+)
       const contentArea = document.getElementById('postContentArea');
       const fontDec = document.getElementById('fontDecrease');
       const fontRes = document.getElementById('fontReset');
@@ -276,69 +277,4 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
-      // 6. Reacciones con Cubitos 🧊
-      const postSlug = window.location.pathname;
-      const likeKey = `cubo_likes_${postSlug}`;
-      let currentLikes = parseInt(localStorage.getItem(likeKey)) || 12;
-      const likeCountEl = document.getElementById('likeCount');
-      if (likeCountEl) likeCountEl.textContent = currentLikes;
-
-      const likeBtn = document.getElementById('likeBtn');
-      if (likeBtn) {
-        likeBtn.addEventListener('click', () => {
-          currentLikes++;
-          localStorage.setItem(likeKey, currentLikes);
-          if (likeCountEl) likeCountEl.textContent = currentLikes;
-          likeBtn.style.transform = 'scale(1.1)';
-          setTimeout(() => likeBtn.style.transform = 'scale(1)', 200);
-        });
-      }
-
-      // 7. Botón Copiar Enlace
-      const shareBtn = document.getElementById('shareBtn');
-      const copyToast = document.getElementById('copyToast');
-      if (shareBtn) {
-        shareBtn.addEventListener('click', () => {
-          navigator.clipboard.writeText(window.location.href);
-          if (copyToast) {
-            copyToast.style.display = 'block';
-            setTimeout(() => copyToast.style.display = 'none', 3000);
-          }
-        });
-      }
-
-      // 8. Temas
-      const themeButtons = document.querySelectorAll('.theme-btn');
-      themeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          themeButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const targetTheme = btn.getAttribute('data-theme-target');
-          if (targetTheme) {
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('cubo-theme', targetTheme);
-          }
-        });
-      });
-
-      const savedTheme = localStorage.getItem('cubo-theme');
-      if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeButtons.forEach(b => {
-          if (b.getAttribute('data-theme-target') === savedTheme) b.classList.add('active');
-          else b.classList.remove('active');
-        });
-      }
-
-      const searchInput = document.getElementById('searchInput');
-      const searchInputBottom = document.getElementById('searchInputBottom');
-      function redirectToHomeSearch(e) {
-        if (e.key === 'Enter' && e.target.value.trim() !== '') {
-          window.location.href = `/?q=${encodeURIComponent(e.target.value.trim())}`;
-        }
-      }
-      if (searchInput) searchInput.addEventListener('keypress', redirectToHomeSearch);
-      if (searchInputBottom) searchInputBottom.addEventListener('keypress', redirectToHomeSearch);
-    </script>
-  </body>
-</html>
+      const postSlug = window.location.
