@@ -17,7 +17,6 @@ export async function getStaticPaths() {
 const { post, relatedPosts } = Astro.props;
 const { Content, headings } = await post.render();
 
-// Cálculo automático de tiempo de lectura (aprox 200 palabras por minuto)
 const plainText = post.body || "";
 const wordCount = plainText.split(/\s+/g).length;
 const readingTime = Math.ceil(wordCount / 200);
@@ -91,12 +90,20 @@ const readingTime = Math.ceil(wordCount / 200);
           <h1 class="post-title">{post.data.title}</h1>
           
           <div class="post-meta-info">
-            <span class="date">📅 Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span class="date">📅 {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             <span class="dot">•</span>
-            <span class="read-time">⏱️ Tiempo de lectura: {readingTime} min</span>
+            <span class="read-time">⏱️ {readingTime} min lectura</span>
+            
+            <!-- Controles de Tamaño de Texto (A- / A+) -->
+            <div class="font-sizer">
+              <span class="sizer-label">Texto:</span>
+              <button id="fontDecrease" class="sizer-btn" title="Reducir texto">A-</button>
+              <button id="fontReset" class="sizer-btn" title="Restaurar tamaño">Normal</button>
+              <button id="fontIncrease" class="sizer-btn" title="Aumentar texto">A+</button>
+            </div>
           </div>
 
-          <!-- Tabla de Contenidos (TOC) Automática si hay subtítulos -->
+          <!-- Tabla de Contenidos (TOC) -->
           {headings.length > 0 && (
             <div class="toc-box">
               <h3>Índice de Contenido</h3>
@@ -108,11 +115,12 @@ const readingTime = Math.ceil(wordCount / 200);
             </div>
           )}
 
-          <div class="post-content">
+          <!-- Contenido del Post -->
+          <div class="post-content" id="postContentArea">
             <Content />
           </div>
 
-          <!-- Sistema de Reacciones con Cubitos 🧊 y Compartir -->
+          <!-- Sistema de Reacciones y Copiar Enlace -->
           <div class="post-actions-bar">
             <button id="likeBtn" class="action-btn">
               🧊 Reaccionar (<span id="likeCount">0</span>)
@@ -146,7 +154,7 @@ const readingTime = Math.ceil(wordCount / 200);
       </section>
     </main>
 
-    <!-- Footer Avanzado en 3 Columnas -->
+    <!-- Footer Avanzado -->
     <footer class="footer-advanced">
       <div class="footer-container">
         <div class="footer-col">
@@ -167,7 +175,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.7 Post Avanzado</strong></p>
+          <p class="update-info">Versión: <strong>v3.8 Sizer + Post</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -185,7 +193,7 @@ const readingTime = Math.ceil(wordCount / 200);
       </div>
     </footer>
 
-    <!-- Script con Reloj, Clima, Progreso, Reacciones y Copiar Enlace -->
+    <!-- Scripts -->
     <script>
       // 1. Reloj
       function updateClock() {
@@ -234,7 +242,7 @@ const readingTime = Math.ceil(wordCount / 200);
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
-      // 4. Barra de Progreso de Lectura al hacer Scroll
+      // 4. Barra de Progreso de Lectura
       window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -243,7 +251,31 @@ const readingTime = Math.ceil(wordCount / 200);
         if (progressBar) progressBar.style.width = scrolled + '%';
       });
 
-      // 5. Reacciones con Cubitos 🧊 persistentes en localStorage
+      // 5. Selector de Tamaño de Texto (A- / Normal / A+)
+      const contentArea = document.getElementById('postContentArea');
+      const fontDec = document.getElementById('fontDecrease');
+      const fontRes = document.getElementById('fontReset');
+      const fontInc = document.getElementById('fontIncrease');
+
+      const savedFontSize = localStorage.getItem('cubo_font_size') || '1rem';
+      if (contentArea) contentArea.style.fontSize = savedFontSize;
+
+      if (fontDec && fontRes && fontInc && contentArea) {
+        fontDec.addEventListener('click', () => {
+          contentArea.style.fontSize = '0.9rem';
+          localStorage.setItem('cubo_font_size', '0.9rem');
+        });
+        fontRes.addEventListener('click', () => {
+          contentArea.style.fontSize = '1rem';
+          localStorage.setItem('cubo_font_size', '1rem');
+        });
+        fontInc.addEventListener('click', () => {
+          contentArea.style.fontSize = '1.2rem';
+          localStorage.setItem('cubo_font_size', '1.2rem');
+        });
+      }
+
+      // 6. Reacciones con Cubitos 🧊
       const postSlug = window.location.pathname;
       const likeKey = `cubo_likes_${postSlug}`;
       let currentLikes = parseInt(localStorage.getItem(likeKey)) || 12;
@@ -261,7 +293,7 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
-      // 6. Botón Copiar Enlace
+      // 7. Botón Copiar Enlace
       const shareBtn = document.getElementById('shareBtn');
       const copyToast = document.getElementById('copyToast');
       if (shareBtn) {
@@ -274,7 +306,7 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
-      // 7. Temas
+      // 8. Temas
       const themeButtons = document.querySelectorAll('.theme-btn');
       themeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -356,7 +388,6 @@ const readingTime = Math.ceil(wordCount / 200);
     min-height: 100vh;
   }
 
-  /* Barra de Progreso de Lectura */
   .reading-progress {
     position: fixed;
     top: 0;
@@ -566,6 +597,39 @@ const readingTime = Math.ceil(wordCount / 200);
     margin-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
     padding-bottom: 1rem;
+    flex-wrap: wrap;
+  }
+
+  /* Estilos del selector de tamaño de texto */
+  .font-sizer {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-left: auto;
+  }
+
+  .sizer-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+
+  .sizer-btn {
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sizer-btn:hover {
+    background-color: var(--accent);
+    color: #000000;
+    border-color: var(--accent);
   }
 
   .toc-box {
@@ -607,6 +671,7 @@ const readingTime = Math.ceil(wordCount / 200);
     color: var(--text-main);
     font-size: 1rem;
     line-height: 1.7;
+    transition: font-size 0.2s ease;
   }
 
   .post-content p {
