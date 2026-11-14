@@ -361,3 +361,13 @@ const titulo = "Cubosite 🧊";
   </body>
 </html>
 
+
+---
+import { getCollection } from 'astro:content';
+import '../styles/global.css'; // <-- Importación global indestructible
+
+const posts = await getCollection('posts');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+
+const titulo = "Cubosite 🧊";
+---
