@@ -1,12 +1,13 @@
 ---
-// Aquí puedes poner lógica de Astro si la necesitas más adelante
+// Configuración y metadatos de la página
+const titulo = "Cubosite - Bitácora y Exploración Digital";
 ---
 
 <html lang="es">
 <head>
 	<meta charset="UTF-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-	<title>Cubosite - Bitácora y Exploración Digital</title>
+	<title>{titulo}</title>
 	<style>
 		:root {
 			--bg-color: #0b0f19;
@@ -71,7 +72,6 @@
 			margin-bottom: 3rem;
 		}
 
-		/* Categorías estilo grid */
 		.categories-grid {
 			display: grid;
 			grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -101,7 +101,7 @@
 </head>
 <body>
 
-	<!-- Barra superior de estados (Tema, Reloj, Clima e IP) -->
+	<!-- Barra superior de estados -->
 	<div class="header-container">
 		<div class="pill-nav">
 			<span class="badge-active">🌙 Dark</span>
@@ -120,7 +120,7 @@
 	<h1 class="main-title">Bitácora y Exploración Digital</h1>
 	<p class="subtitle">Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
 
-	<!-- Secciones / Categorías del sitio -->
+	<!-- Categorías del sitio -->
 	<div class="categories-grid">
 		<a href="/" class="category-card">🏠 Inicio</a>
 		<a href="/peliculas" class="category-card">🎬 Películas</a>
@@ -130,33 +130,41 @@
 		<a href="/novedades" class="category-card">🚀 Novedades</a>
 	</div>
 
-	<!-- Scripts en tiempo real para Hora, IP y Clima Dinámico -->
-	<script>
+	<!-- Script limpio optimizado para Astro -->
+	<script is:inline>
 		// 1. Reloj en tiempo real
 		function actualizarReloj() {
 			const ahora = new Date();
-			document.getElementById('reloj').innerText = `🕒 ${ahora.toLocaleTimeString()}`;
+			const elReloj = document.getElementById('reloj');
+			if (elReloj) {
+				elReloj.innerText = '🕒 ' + ahora.toLocaleTimeString();
+			}
 		}
 		setInterval(actualizarReloj, 1000);
 		actualizarReloj();
 
 		// 2. Obtener IP del usuario
 		fetch('https://api.ipify.org?format=json')
-			.then(response => response.json())
-			.then(data => {
-				document.getElementById('ip-user').innerText = `🌐 IP: ${data.ip}`;
+			.then(function(response) { return response.json(); })
+			.then(function(data) {
+				const elIp = document.getElementById('ip-user');
+				if (elIp) {
+					elIp.innerText = '🌐 IP: ' + data.ip;
+				}
 			})
-			.catch(() => {
-				document.getElementById('ip-user').innerText = `🌐 IP: No disponible`;
+			.catch(function() {
+				const elIp = document.getElementById('ip-user');
+				if (elIp) {
+					elIp.innerText = '🌐 IP: No disponible';
+				}
 			});
 
-		// 3. Clima dinámico real (Basado en códigos meteorológicos de Open-Meteo)
+		// 3. Clima dinámico real
 		async function obtenerClima() {
 			try {
-				// Coordenadas genéricas (puedes cambiarlas o usar geolocalización)
-				const lat = 4.6097; // Ejemplo: Bogotá (puedes poner tu lat/lon)
+				const lat = 4.6097;
 				const lon = -74.0817;
-				const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+				const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=' + lat + '&longitude=' + lon + '&current_weather=true');
 				const data = await res.json();
 				
 				const temp = Math.round(data.current_weather.temperature);
@@ -165,7 +173,36 @@
 				let condicion = "Despejado";
 				let icono = "☀️";
 
-				// Códigos WMO de clima
 				if (code >= 51 && code <= 67) {
 					condicion = "Lluvioso";
-					icono
+					icono = "🌧️";
+				} else if (code >= 71 && code <= 77) {
+					condicion = "Nevando";
+					icono = "❄️";
+				} else if (code >= 95) {
+					condicion = "Tormenta";
+					icono = "⚡";
+				} else if (code >= 1 && code <= 3) {
+					condicion = "Nublado";
+					icono = "☁️";
+				} else if (code === 45 || code === 48) {
+					condicion = "Neblina";
+					icono = "🌫️";
+				}
+
+				const elClima = document.getElementById('widget-clima');
+				if (elClima) {
+					elClima.innerText = icono + ' ' + temp + '°C ' + condicion;
+				}
+			} catch (e) {
+				const elClima = document.getElementById('widget-clima');
+				if (elClima) {
+					elClima.innerText = "⛅ Clima no disponible";
+				}
+			}
+		}
+
+		obtenerClima();
+	</script>
+</body>
+</html>
