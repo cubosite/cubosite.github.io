@@ -68,8 +68,8 @@ const { Content } = await post.render();
           </div>
         </div>
       
-        <h1>Bitácora y Exploración Digital</h1>
-        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
+       <h1>Bitácora y Exploración Digital</h1>
+       <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
 
       <!-- Tarjeta del Artículo -->
@@ -246,14 +246,14 @@ const { Content } = await post.render();
 
 <style>
   :root[data-theme="dark"] {
-    --bg-base: #030712;
+    --bg-base: #000000;
     --bg-surface: #0b0f19;
-    --bg-card: #111827;
-    --border-color: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-    --accent-glow: rgba(56, 189, 248, 0.1);
+    --bg-card: #141414;
+    --border-color: #222222;
+    --text-main: #ffffff;
+    --text-muted: #a1a1aa;
+    --accent: #aaff00;
+    --accent-glow: rgba(170, 255, 0, 0.15);
   }
 
   :root[data-theme="light"] {
@@ -313,7 +313,7 @@ const { Content } = await post.render();
   .logo {
     font-weight: 700;
     font-size: 1.25rem;
-    color: var(--text-main);
+    color: var(--accent);
     text-decoration: none;
   }
 
@@ -350,7 +350,7 @@ const { Content } = await post.render();
     color: var(--text-muted);
     text-decoration: none;
     font-size: 0.85rem;
-    font-weight: 500;
+    font-weight: 600;
     transition: color 0.2s ease;
     cursor: pointer;
   }
@@ -362,7 +362,7 @@ const { Content } = await post.render();
   .container {
     max-width: 1150px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 2rem 2rem 4rem;
     flex: 1;
     width: 100%;
     box-sizing: border-box;
@@ -370,13 +370,13 @@ const { Content } = await post.render();
 
   .hero {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
   .hero-top-bar {
     display: flex;
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
     gap: 1.25rem;
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
@@ -406,7 +406,7 @@ const { Content } = await post.render();
 
   .theme-btn.active, .theme-btn:hover {
     background-color: var(--accent);
-    color: var(--bg-base);
+    color: #000000;
   }
 
   .info-widget {
@@ -431,6 +431,7 @@ const { Content } = await post.render();
     font-size: 2.5rem;
     margin: 1.2rem 0 1rem;
     font-weight: 700;
+    color: var(--accent);
     letter-spacing: -0.02em;
   }
 
@@ -474,7 +475,7 @@ const { Content } = await post.render();
     font-size: 2.25rem;
     margin: 0 0 0.5rem;
     font-weight: 700;
-    color: var(--text-main);
+    color: var(--accent);
     letter-spacing: -0.02em;
   }
 
@@ -498,7 +499,8 @@ const { Content } = await post.render();
   }
 
   .post-content h2 {
-    color: var(--text-main);
+    color: var(--accent);
+    font-weight: 700;
     font-size: 1.5rem;
     margin-top: 2rem;
     margin-bottom: 1rem;
@@ -506,10 +508,16 @@ const { Content } = await post.render();
     padding-bottom: 0.5rem;
   }
 
+  .post-content a {
+    color: var(--accent);
+    font-weight: 700;
+    text-decoration: underline;
+  }
+
   .btn-back {
     color: var(--accent);
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 0.95rem;
     transition: color 0.2s ease;
   }
@@ -536,7 +544,8 @@ const { Content } = await post.render();
   }
 
   .footer-col h3, .footer-col h4 {
-    color: var(--text-main);
+    color: var(--accent);
+    font-weight: 700;
     margin-top: 0;
     margin-bottom: 1rem;
     font-size: 1.1rem;
@@ -546,6 +555,7 @@ const { Content } = await post.render();
     font-size: 0.85rem;
     line-height: 1.6;
     margin-bottom: 1rem;
+    color: var(--text-main);
   }
 
   .footer-col ul {
@@ -561,6 +571,7 @@ const { Content } = await post.render();
   .footer-col ul li a {
     color: var(--text-muted);
     text-decoration: none;
+    font-weight: 600;
     font-size: 0.85rem;
     transition: color 0.2s ease;
   }
@@ -576,13 +587,14 @@ const { Content } = await post.render();
     padding: 0.25rem 0.6rem;
     border-radius: 9999px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     border: 1px solid var(--border-color);
   }
 
   .update-info {
     font-size: 0.85rem;
     margin-bottom: 0.75rem;
+    color: var(--text-main);
   }
 
   .footer-search-box input {
@@ -610,5 +622,6 @@ const { Content } = await post.render();
     padding-top: 1.5rem;
     text-align: center;
     font-size: 0.8rem;
+    color: var(--text-muted);
   }
 </style>
