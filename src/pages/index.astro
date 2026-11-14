@@ -63,6 +63,14 @@ const titulo = "Cubosite 🧊";
             <span class="divider">|</span>
             <span id="userIp">🌐 IP: Cargando...</span>
           </div>
+
+          <!-- Selector de Tamaño de Texto en Index -->
+          <div class="font-sizer">
+            <span class="sizer-label">Texto:</span>
+            <button id="fontDecrease" class="sizer-btn" title="Reducir texto">A-</button>
+            <button id="fontReset" class="sizer-btn" title="Restaurar tamaño">Normal</button>
+            <button id="fontIncrease" class="sizer-btn" title="Aumentar texto">A+</button>
+          </div>
         </div>
 
         <h1>Bitácora y Exploración Digital</h1>
@@ -121,7 +129,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.7 Avanzada</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v3.8 Sizer Index</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -139,7 +147,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Reloj, Clima Dinámico, IP, Temas y Paginación -->
+    <!-- Script Completo -->
     <script is:inline>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -211,6 +219,29 @@ const titulo = "Cubosite 🧊";
           const ipElement = document.getElementById('userIp');
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
+
+      // Selector de Tamaño de Texto en Index
+      const fontDec = document.getElementById('fontDecrease');
+      const fontRes = document.getElementById('fontReset');
+      const fontInc = document.getElementById('fontIncrease');
+
+      const savedFontSize = localStorage.getItem('cubo_index_font_size') || '1rem';
+      document.documentElement.style.setProperty('--site-font-size', savedFontSize);
+
+      if (fontDec && fontRes && fontInc) {
+        fontDec.addEventListener('click', () => {
+          document.documentElement.style.setProperty('--site-font-size', '0.9rem');
+          localStorage.setItem('cubo_index_font_size', '0.9rem');
+        });
+        fontRes.addEventListener('click', () => {
+          document.documentElement.style.setProperty('--site-font-size', '1rem');
+          localStorage.setItem('cubo_index_font_size', '1rem');
+        });
+        fontInc.addEventListener('click', () => {
+          document.documentElement.style.setProperty('--site-font-size', '1.15rem');
+          localStorage.setItem('cubo_index_font_size', '1.15rem');
+        });
+      }
 
       const themeButtons = document.querySelectorAll('.theme-btn');
       themeButtons.forEach(btn => {
@@ -362,6 +393,10 @@ const titulo = "Cubosite 🧊";
 </html>
 
 <style>
+  :root {
+    --site-font-size: 1rem;
+  }
+
   :root[data-theme="dark"] {
     --bg-base: #000000;
     --bg-surface: #0b0f19;
@@ -399,6 +434,7 @@ const titulo = "Cubosite 🧊";
     font-family: 'Inter', sans-serif;
     background-color: var(--bg-base);
     color: var(--text-main);
+    font-size: var(--site-font-size);
     margin: 0;
     padding: 0;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -493,7 +529,7 @@ const titulo = "Cubosite 🧊";
   .hero-top-bar {
     display: flex;
     justify-content: center;
-    align-items: stretch;
+    align-items: center;
     gap: 1.25rem;
     margin-bottom: 1.75rem;
     flex-wrap: wrap;
@@ -542,6 +578,40 @@ const titulo = "Cubosite 🧊";
   .info-widget .divider {
     color: var(--border-color);
     font-weight: 400;
+  }
+
+  /* Selector de Tamaño de Texto en Index */
+  .font-sizer {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 0.3rem 0.75rem;
+    border-radius: 9999px;
+  }
+
+  .sizer-label {
+    font-weight: 600;
+    color: var(--text-muted);
+    font-size: 0.8rem;
+  }
+
+  .sizer-btn {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    font-size: 0.8rem;
+    font-weight: 700;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  .sizer-btn:hover {
+    background-color: var(--accent);
+    color: #000000;
   }
 
   h1 {
