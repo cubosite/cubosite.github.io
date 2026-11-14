@@ -23,7 +23,7 @@ const titulo = "Cubosite 🧊";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación con Categorías de Index -->
+    <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
@@ -37,7 +37,6 @@ const titulo = "Cubosite 🧊";
           />
         </div>
 
-        <!-- Categorías idénticas al Index -->
         <nav class="nav-links">
           <a href="/">Inicio</a>
           <a href="/#terror" class="filter-btn" data-category="Terror">Terror</a>
@@ -133,9 +132,8 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script con Reloj 12h (sin segundos), Clima Dinámico real, IP, Temas y redirección -->
+    <!-- Script con Reloj 12h (sin segundos), Clima Dinámico real, IP y Temas -->
     <script is:inline>
-      // 1. Reloj en formato de 12 horas (sin segundos)
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
@@ -151,7 +149,6 @@ const titulo = "Cubosite 🧊";
       setInterval(updateClock, 1000);
       updateClock();
 
-      // 2. Clima dinámico real (Open-Meteo)
       async function obtenerClima() {
         try {
           const lat = 4.6097; 
@@ -174,4 +171,10 @@ const titulo = "Cubosite 🧊";
           } else if (code >= 95) {
             condicion = "Tormenta";
             icono = "⚡";
-          } else if (code >= 1 && code <=
+          } else if (code >= 1 && code <= 3) {
+            condicion = "Nublado";
+            icono = "☁️";
+          } else if (code === 45 || code === 48) {
+            condicion = "Neblina";
+            icono = "🌫️";
+          }
