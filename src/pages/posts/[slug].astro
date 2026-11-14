@@ -18,19 +18,16 @@ const titulo = "Cubosite 🧊";
 <html lang="es" data-theme="dark">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <title>{post.data.title} - {titulo}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{post.data.title} - Cubosite 🧊</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación idéntica al Index -->
+    <!-- Barra de Navegación con Categorías de Index -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
         
-        <!-- Buscador integrado -->
         <div class="search-box">
           <input 
             type="text" 
@@ -40,7 +37,7 @@ const titulo = "Cubosite 🧊";
           />
         </div>
 
-        <!-- Filtros por categoría idénticos al Index -->
+        <!-- Categorías idénticas al Index -->
         <nav class="nav-links">
           <a href="/">Inicio</a>
           <a href="/#terror" class="filter-btn" data-category="Terror">Terror</a>
@@ -54,7 +51,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </header>
 
-    <!-- Contenido Principal idéntico al Index -->
+    <!-- Contenido Principal -->
     <main class="container">
       <section class="hero">
         <div class="hero-top-bar">
@@ -65,23 +62,23 @@ const titulo = "Cubosite 🧊";
           </div>
           
           <div class="info-widget">
-            <span id="liveClock">🕒 Cargando hora...</span>
+            <span id="liveClock">🕒 Cargando...</span>
+            <span class="divider">|</span>
+            <span id="widget-clima">⛅ Cargando...</span>
             <span class="divider">|</span>
             <span id="userIp">🌐 IP: Cargando...</span>
           </div>
         </div>
-
-        <!-- Título y subtítulo idénticos al index.astro -->
-        <h1>Bitácora y Exploración Digital</h1>
-        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
+      
+       <h1>Bitácora y Exploración Digital</h1>
+       <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
 
-      <!-- Sección de Contenido Dinámico del Artículo manteniendo la misma maquetación -->
+      <!-- Tarjeta del Artículo -->
       <section class="content-section">
-        <h2>{post.data.title}</h2>
-        
-        <div class="post-container">
+        <article class="post-container">
           <span class="tag">{post.data.category}</span>
+          <h1 class="post-title">{post.data.title}</h1>
           <p class="date">
             Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
           </p>
@@ -93,22 +90,19 @@ const titulo = "Cubosite 🧊";
           <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
             <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
           </div>
-        </div>
+        </article>
       </section>
     </main>
 
-    <!-- Footer Avanzado en 3 Columnas idéntico al Index -->
+    <!-- Footer Avanzado en 3 Columnas -->
     <footer class="footer-advanced">
       <div class="footer-container">
-        
-        <!-- Columna 1 -->
         <div class="footer-col">
           <h3>Cubosite 🧊</h3>
           <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
           <span class="footer-badge">Estado: 100% Operativo 🚀</span>
         </div>
 
-        <!-- Columna 2 -->
         <div class="footer-col">
           <h4>Contacto & Enlaces</h4>
           <ul>
@@ -119,10 +113,9 @@ const titulo = "Cubosite 🧊";
           </ul>
         </div>
 
-        <!-- Columna 3 -->
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.6 Paginada</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v3.6 Post</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -133,7 +126,6 @@ const titulo = "Cubosite 🧊";
             />
           </div>
         </div>
-
       </div>
 
       <div class="footer-bottom">
@@ -141,437 +133,45 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Temas, Reloj, IP y redirección de búsqueda -->
-    <script>
+    <!-- Script con Reloj 12h (sin segundos), Clima Dinámico real, IP, Temas y redirección -->
+    <script is:inline>
+      // 1. Reloj en formato de 12 horas (sin segundos)
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
           const now = new Date();
-          const timeString = now.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+          const timeString = now.toLocaleTimeString('es-ES', { 
+            hour: 'numeric', 
+            minute: '2-digit', 
+            hour12: true 
+          });
           clockElement.textContent = `🕒 ${timeString}`;
         }
       }
       setInterval(updateClock, 1000);
       updateClock();
 
-      fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-          const ipElement = document.getElementById('userIp');
-          if (ipElement) {
-            ipElement.textContent = `🌐 IP: ${data.ip}`;
-          }
-        })
-        .catch(() => {
-          const ipElement = document.getElementById('userIp');
-          if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
-        });
+      // 2. Clima dinámico real (Open-Meteo)
+      async function obtenerClima() {
+        try {
+          const lat = 4.6097; 
+          const lon = -74.0817;
+          const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
+          const data = await res.json();
+          
+          const temp = Math.round(data.current_weather.temperature);
+          const code = data.current_weather.weathercode;
 
-      const themeButtons = document.querySelectorAll('.theme-btn');
-      themeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          themeButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const targetTheme = btn.getAttribute('data-theme-target');
-          if (targetTheme) {
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('cubo-theme', targetTheme);
-          }
-        });
-      });
+          let condicion = "Despejado";
+          let icono = "☀️";
 
-      const savedTheme = localStorage.getItem('cubo-theme');
-      if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeButtons.forEach(b => {
-          if (b.getAttribute('data-theme-target') === savedTheme) {
-            b.classList.add('active');
-          } else {
-            b.classList.remove('active');
-          }
-        });
-      }
-
-      const searchInput = document.getElementById('searchInput');
-      const searchInputBottom = document.getElementById('searchInputBottom');
-
-      function redirectToHomeSearch(e) {
-        if (e.key === 'Enter' && e.target.value.trim() !== '') {
-          window.location.href = `/?q=${encodeURIComponent(e.target.value.trim())}`;
-        }
-      }
-
-      if (searchInput) searchInput.addEventListener('keypress', redirectToHomeSearch);
-      if (searchInputBottom) searchInputBottom.addEventListener('keypress', redirectToHomeSearch);
-    </script>
-  </body>
-</html>
-
-<style>
-  :root[data-theme="dark"] {
-    --bg-base: #030712;
-    --bg-surface: #0b0f19;
-    --bg-card: #111827;
-    --border-color: #1e293b;
-    --text-main: #f8fafc;
-    --text-muted: #94a3b8;
-    --accent: #38bdf8;
-    --accent-glow: rgba(56, 189, 248, 0.1);
-  }
-
-  :root[data-theme="light"] {
-    --bg-base: #f1f5f9;
-    --bg-surface: #e2e8f0;
-    --bg-card: #ffffff;
-    --border-color: #cbd5e1;
-    --text-main: #0f172a;
-    --text-muted: #475569;
-    --accent: #0284c7;
-    --accent-glow: rgba(2, 132, 199, 0.1);
-  }
-
-  :root[data-theme="green"] {
-    --bg-base: #022c22;
-    --bg-surface: #064e3b;
-    --bg-card: #065f46;
-    --border-color: #047857;
-    --text-main: #ecfdf5;
-    --text-muted: #a7f3d0;
-    --accent: #34d399;
-    --accent-glow: rgba(52, 211, 153, 0.15);
-  }
-
-  body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-base);
-    color: var(--text-main);
-    margin: 0;
-    padding: 0;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-  }
-
-  .navbar {
-    background-color: var(--bg-surface);
-    backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    padding: 1rem 2rem;
-  }
-
-  .nav-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-
-  .logo {
-    font-weight: 700;
-    font-size: 1.25rem;
-    color: var(--text-main);
-    text-decoration: none;
-  }
-
-  .search-box input {
-    background-color: var(--bg-base);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    outline: none;
-    width: 180px;
-    transition: all 0.2s ease;
-  }
-
-  .search-box input:focus {
-    border-color: var(--accent);
-    width: 230px;
-    box-shadow: 0 0 10px var(--accent-glow);
-  }
-
-  .search-box input::placeholder {
-    color: var(--text-muted);
-  }
-
-  .nav-links {
-    display: flex;
-    gap: 1.2rem;
-    flex-wrap: wrap;
-    align-items: center;
-  }
-
-  .nav-links a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    font-weight: 500;
-    transition: color 0.2s ease;
-    cursor: pointer;
-  }
-
-  .nav-links a:hover, .nav-links a.active {
-    color: var(--accent);
-  }
-
-  .container {
-    max-width: 1150px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-    flex: 1;
-    width: 100%;
-    box-sizing: border-box;
-  }
-
-  .hero {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .hero-top-bar {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 1.25rem;
-    margin-bottom: 1.75rem;
-    flex-wrap: wrap;
-  }
-
-  .theme-switchers {
-    display: flex;
-    align-items: center;
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 0.3rem;
-    border-radius: 9999px;
-    gap: 0.25rem;
-  }
-
-  .theme-btn {
-    background: transparent;
-    border: none;
-    color: var(--text-muted);
-    padding: 0.45rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .theme-btn.active, .theme-btn:hover {
-    background-color: var(--accent);
-    color: var(--bg-base);
-  }
-
-  .info-widget {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.45rem 1.25rem;
-    border-radius: 9999px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-  }
-
-  .info-widget .divider {
-    color: var(--border-color);
-    font-weight: 400;
-  }
-
-  h1 {
-    font-size: 2.5rem;
-    margin: 1.2rem 0 1rem;
-    font-weight: 700;
-    letter-spacing: -0.02em;
-  }
-
-  .hero p {
-    color: var(--text-muted);
-    font-size: 1.1rem;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
-  }
-
-  .content-section {
-    max-width: 900px;
-    margin: 0 auto;
-    margin-bottom: 2rem;
-  }
-
-  .content-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 1.5rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-  }
-
-  .post-container {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    padding: 2.5rem;
-    border-radius: 0.75rem;
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-    box-sizing: border-box;
-  }
-
-  .tag {
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    color: var(--accent);
-    font-weight: 700;
-    background-color: var(--accent-glow);
-    padding: 0.25rem 0.6rem;
-    border-radius: 9999px;
-    border: 1px solid var(--border-color);
-    display: inline-block;
-    margin-bottom: 0.75rem;
-  }
-
-  .date {
-    font-size: 0.75rem;
-    color: var(--text-muted);
-    margin-bottom: 2rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 1rem;
-    opacity: 0.8;
-  }
-
-  .post-content {
-    color: var(--text-main);
-    font-size: 1rem;
-    line-height: 1.7;
-  }
-
-  .post-content p {
-    margin-bottom: 1.25rem;
-  }
-
-  .post-content h2 {
-    color: var(--text-main);
-    font-size: 1.5rem;
-    margin-top: 2rem;
-    margin-bottom: 1rem;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-  }
-
-  .btn-back {
-    color: var(--accent);
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 0.95rem;
-    transition: color 0.2s ease;
-  }
-
-  .btn-back:hover {
-    text-decoration: underline;
-  }
-
-  .footer-advanced {
-    background-color: var(--bg-surface);
-    border-top: 1px solid var(--border-color);
-    color: var(--text-muted);
-    margin-top: auto;
-    padding: 3rem 2rem 1.5rem;
-  }
-
-  .footer-container {
-    max-width: 1150px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 2.5rem;
-    margin-bottom: 2.5rem;
-  }
-
-  .footer-col h3, .footer-col h4 {
-    color: var(--text-main);
-    margin-top: 0;
-    margin-bottom: 1rem;
-    font-size: 1.1rem;
-  }
-
-  .footer-col p {
-    font-size: 0.85rem;
-    line-height: 1.6;
-    margin-bottom: 1rem;
-  }
-
-  .footer-col ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-  }
-
-  .footer-col ul li {
-    margin-bottom: 0.6rem;
-  }
-
-  .footer-col ul li a {
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.85rem;
-    transition: color 0.2s ease;
-  }
-
-  .footer-col ul li a:hover {
-    color: var(--accent);
-  }
-
-  .footer-badge {
-    display: inline-block;
-    background-color: var(--accent-glow);
-    color: var(--accent);
-    padding: 0.25rem 0.6rem;
-    border-radius: 9999px;
-    font-size: 0.75rem;
-    font-weight: 600;
-    border: 1px solid var(--border-color);
-  }
-
-  .update-info {
-    font-size: 0.85rem;
-    margin-bottom: 0.75rem;
-  }
-
-  .footer-search-box input {
-    width: 100%;
-    background-color: var(--bg-base);
-    border: 1px solid var(--border-color);
-    color: var(--text-main);
-    padding: 0.5rem 1rem;
-    border-radius: 9999px;
-    font-size: 0.85rem;
-    outline: none;
-    box-sizing: border-box;
-    transition: border-color 0.2s ease;
-  }
-
-  .footer-search-box input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 8px var(--accent-glow);
-  }
-
-  .footer-bottom {
-    max-width: 1150px;
-    margin: 0 auto;
-    border-top: 1px solid var(--border-color);
-    padding-top: 1.5rem;
-    text-align: center;
-    font-size: 0.8rem;
-  }
-</style>
+          if (code >= 51 && code <= 67) {
+            condicion = "Lluvioso";
+            icono = "🌧️";
+          } else if (code >= 71 && code <= 77) {
+            condicion = "Nevando";
+            icono = "❄️";
+          } else if (code >= 95) {
+            condicion = "Tormenta";
+            icono = "⚡";
+          } else if (code >= 1 && code <=
