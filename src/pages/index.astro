@@ -17,7 +17,7 @@ const titulo = "Cubosite 🧊";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Progreso de Lectura -->
+    <!-- 1. Barra de Progreso de Lectura -->
     <div id="readingProgress" class="reading-progress"></div>
 
     <!-- Barra de Navegación -->
@@ -124,7 +124,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.11 Estable</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v3.12 Index + Progress</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -142,7 +142,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Reloj, Clima Dinámico, IP, Temas y Paginación -->
+    <!-- Script de Reloj, Clima, IP, Temas, Paginación y Barra de Progreso -->
     <script is:inline>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -215,7 +215,7 @@ const titulo = "Cubosite 🧊";
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
-      // Barra de Progreso de Lectura
+      // Barra de Progreso de Lectura al hacer Scroll
       window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -253,4 +253,214 @@ const titulo = "Cubosite 🧊";
       const searchInputBottom = document.getElementById('searchInputBottom');
       const cardsGrid = document.getElementById('cardsGrid');
       const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
-      const filterButtons = document.querySelectorAll
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const noResults = document.getElementById('noResults');
+      
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      const pageInfo = document.getElementById('pageInfo');
+
+      let currentCategory = 'todos';
+      let currentPage = 1;
+      const itemsPerPage = 24;
+
+      function normalizeText(text) {
+        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
+      }
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category') || 'todos';
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          if (searchInputBottom) searchInputBottom.value = searchInput.value;
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      }
+
+      if (searchInputBottom) {
+        searchInputBottom.addEventListener('input', () => {
+          if (searchInput) searchInput.value = searchInputBottom.value;
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', () => {
+          if (currentPage > 1) {
+            currentPage--;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', () => {
+          const termValue = searchInput ? searchInput.value : '';
+          const filteredCards = getFilteredCards(termValue);
+          const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
+          if (currentPage < totalPages) {
+            currentPage++;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
+
+      function getFilteredCards(termValue) {
+        const searchTerm = normalizeText(termValue);
+        return cards.filter(card => {
+          const title = normalizeText(card.getAttribute('data-title'));
+          const category = normalizeText(card.getAttribute('data-category'));
+          const text = normalizeText(card.textContent);
+
+          const normCurrentCat = normalizeText(currentCategory);
+          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
+          const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
+
+          return matchesCategory && matchesSearch;
+        });
+      }
+
+      function filterAndPaginate() {
+        const termValue = searchInput ? searchInput.value : '';
+        const filteredCards = getFilteredCards(termValue);
+        const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
+
+        if (currentPage > totalPages) currentPage = totalPages;
+        if (currentPage < 1) currentPage = 1;
+
+        cards.forEach(card => card.style.display = 'none');
+
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const endIndex = startIndex + itemsPerPage;
+        const cardsToShow = filteredCards.slice(startIndex, endIndex);
+
+        cardsToShow.forEach(card => {
+          card.style.display = 'block';
+        });
+
+        if (noResults) {
+          noResults.style.display = filteredCards.length === 0 ? 'block' : 'none';
+        }
+
+        if (pageInfo) {
+          pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
+        }
+        if (prevBtn) {
+          prevBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
+          prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+        }
+        if (nextBtn) {
+          nextBtn.style.opacity = currentPage === totalPages || totalPages === 0 ? '0.4' : '1';
+          nextBtn.style.cursor = currentPage === totalPages || totalPages === 0 ? 'not-allowed' : 'pointer';
+        }
+      }
+
+      filterAndPaginate();
+    </script>
+  </body>
+</html>
+
+<style>
+  :root[data-theme="dark"] {
+    --bg-base: #000000;
+    --bg-surface: #0b0f19;
+    --bg-card: #141414;
+    --border-color: #222222;
+    --text-main: #ffffff;
+    --text-muted: #a1a1aa;
+    --accent: #aaff00;
+    --accent-glow: rgba(170, 255, 0, 0.15);
+  }
+
+  :root[data-theme="light"] {
+    --bg-base: #f1f5f9;
+    --bg-surface: #e2e8f0;
+    --bg-card: #ffffff;
+    --border-color: #cbd5e1;
+    --text-main: #0f172a;
+    --text-muted: #475569;
+    --accent: #0284c7;
+    --accent-glow: rgba(2, 132, 199, 0.1);
+  }
+
+  :root[data-theme="green"] {
+    --bg-base: #022c22;
+    --bg-surface: #064e3b;
+    --bg-card: #065f46;
+    --border-color: #047857;
+    --text-main: #ecfdf5;
+    --text-muted: #a7f3d0;
+    --accent: #34d399;
+    --accent-glow: rgba(52, 211, 153, 0.15);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* Barra de Progreso de Lectura */
+  .reading-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 4px;
+    background-color: var(--accent);
+    width: 0%;
+    z-index: 1000;
+    transition: width 0.1s ease-out;
+  }
+
+  .navbar {
+    background-color: var(--bg-surface);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+  }
+
+  .nav-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .search-box input {
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 9
