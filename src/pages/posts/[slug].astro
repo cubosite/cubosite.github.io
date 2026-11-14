@@ -11,8 +11,6 @@ export async function getStaticPaths() {
 
 const { post } = Astro.props;
 const { Content } = await post.render();
-
-const titulo = "Cubosite 🧊";
 ---
 
 <html lang="es" data-theme="dark">
@@ -23,7 +21,7 @@ const titulo = "Cubosite 🧊";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación -->
+    <!-- Barra de Navegación con Categorías de Index -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
@@ -37,6 +35,7 @@ const titulo = "Cubosite 🧊";
           />
         </div>
 
+        <!-- Categorías idénticas al Index -->
         <nav class="nav-links">
           <a href="/">Inicio</a>
           <a href="/#terror" class="filter-btn" data-category="Terror">Terror</a>
@@ -132,8 +131,9 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script con Reloj 12h (sin segundos), Clima Dinámico real, IP y Temas -->
+    <!-- Script de Temas, Reloj (12h sin segundos), Clima Dinámico real, IP y redirección -->
     <script is:inline>
+      // 1. Reloj en formato de 12 horas (sin segundos)
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
@@ -149,6 +149,7 @@ const titulo = "Cubosite 🧊";
       setInterval(updateClock, 1000);
       updateClock();
 
+      // 2. Clima dinámico real (Open-Meteo)
       async function obtenerClima() {
         try {
           const lat = 4.6097; 
@@ -178,3 +179,5 @@ const titulo = "Cubosite 🧊";
             condicion = "Neblina";
             icono = "🌫️";
           }
+
+          const elClima = document.getElementById('widget
