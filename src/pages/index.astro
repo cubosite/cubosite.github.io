@@ -56,11 +56,9 @@ const titulo = "Cubosite 🧊";
             <button class="theme-btn" data-theme-target="green">🟢 Green</button>
           </div>
           
-          <!-- Widget unificado con Hora (12h), Clima/Temperatura e IP -->
+          <!-- Widget unificado con Hora (12h) e IP -->
           <div class="info-widget">
-            <span id="liveClock">🕒 Cargando...</span>
-            <span class="divider">|</span>
-            <span id="weatherWidget">🌡️ Cargando clima...</span>
+            <span id="liveClock">🕒 Cargando hora...</span>
             <span class="divider">|</span>
             <span id="userIp">🌐 IP: Cargando...</span>
           </div>
@@ -145,7 +143,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Reloj (12h), Clima, IP, Paginación, Filtrado y Temas -->
+    <!-- Script limpio, sin errores de sintaxis en build -->
     <script>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -156,124 +154,4 @@ const titulo = "Cubosite 🧊";
             minute: '2-digit',
             hour12: true 
           });
-          clockElement.textContent = `🕒 ${timeString}`;
-        }
-      }
-      setInterval(updateClock, 1000);
-      updateClock();
-
-      fetch('https://wttr.in/?format=%c+%t')
-        .then(response => response.text())
-        .then(weatherText => {
-          const weatherElement = document.getElementById('weatherWidget');
-          if (weatherElement && !weatherText.includes('<html>')) {
-            weatherElement.textContent = `🌡️ ${weatherText.trim()}`;
-          } else {
-            throw new Error();
-          }
-        })
-        .catch(() => {
-          const weatherElement = document.getElementById('weatherWidget');
-          if (weatherElement) weatherElement.textContent = `🌡️ Clima no disponible`;
-        });
-
-      fetch('https://api.ipify.org?format=json')
-        .then(response => response.json())
-        .then(data => {
-          const ipElement = document.getElementById('userIp');
-          if (ipElement) {
-            ipElement.textContent = `🌐 IP: ${data.ip}`;
-          }
-        })
-        .catch(() => {
-          const ipElement = document.getElementById('userIp');
-          if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
-        });
-
-      const themeButtons = document.querySelectorAll('.theme-btn');
-      themeButtons.forEach(btn => {
-        btn.addEventListener('click', () => {
-          themeButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          const targetTheme = btn.getAttribute('data-theme-target');
-          if (targetTheme) {
-            document.documentElement.setAttribute('data-theme', targetTheme);
-            localStorage.setItem('cubo-theme', targetTheme);
-          }
-        });
-      });
-
-      const savedTheme = localStorage.getItem('cubo-theme');
-      if (savedTheme) {
-        document.documentElement.setAttribute('data-theme', savedTheme);
-        themeButtons.forEach(b => {
-          if (b.getAttribute('data-theme-target') === savedTheme) {
-            b.classList.add('active');
-          } else {
-            b.classList.remove('active');
-          }
-        });
-      }
-
-      const searchInput = document.getElementById('searchInput');
-      const searchInputBottom = document.getElementById('searchInputBottom');
-      const cardsGrid = document.getElementById('cardsGrid');
-      const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
-      const filterButtons = document.querySelectorAll('.filter-btn');
-      const noResults = document.getElementById('noResults');
-      
-      const prevBtn = document.getElementById('prevPageBtn');
-      const nextBtn = document.getElementById('nextPageBtn');
-      const pageInfo = document.getElementById('pageInfo');
-
-      let currentCategory = 'todos';
-      let currentPage = 1;
-      const itemsPerPage = 24;
-
-      function normalizeText(text) {
-        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
-      }
-
-      filterButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          filterButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentCategory = btn.getAttribute('data-category') || 'todos';
-          currentPage = 1;
-          filterAndPaginate();
-        });
-      });
-
-      if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          if (searchInputBottom) searchInputBottom.value = searchInput.value;
-          currentPage = 1;
-          filterAndPaginate();
-        });
-      }
-
-      if (searchInputBottom) {
-        searchInputBottom.addEventListener('input', () => {
-          if (searchInput) searchInput.value = searchInputBottom.value;
-          currentPage = 1;
-          filterAndPaginate();
-        });
-      }
-
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          if (currentPage > 1) {
-            currentPage--;
-            filterAndPaginate();
-            window.scrollTo({ top: 400, behavior: 'smooth' });
-          }
-        });
-      }
-
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          const termValue = searchInput ? searchInput.value : '';
-          const filteredCards = getFilteredCards(termValue);
-          const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
-          if
+          clockElement.textContent =
