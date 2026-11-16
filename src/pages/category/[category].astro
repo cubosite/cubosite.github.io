@@ -64,7 +64,7 @@ const titulo = `Categoría: ${category} - Cubosite 🧊`;
       </div>
     </header>
 
-    <!-- Contenido Principal -->
+    <!-- Contenido Principal con espaciado exacto unificado a 65px -->
     <main class="container">
       <section class="hero">
         <div class="hero-top-bar">
@@ -136,7 +136,7 @@ const titulo = `Categoría: ${category} - Cubosite 🧊`;
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v4.0 Categories</strong></p>
+          <p class="update-info">Versión: <strong>v6.1 Category 65px Fix</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -209,7 +209,7 @@ const titulo = `Categoría: ${category} - Cubosite 🧊`;
       });
 
       const themeButtons = document.querySelectorAll('.theme-btn');
-      themeButtons.forEach(btn => {
+      themeButtons.themeSwitchers?.forEach || themeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
           themeButtons.forEach(b => b.classList.remove('active'));
           btn.classList.add('active');
@@ -396,10 +396,11 @@ const titulo = `Categoría: ${category} - Cubosite 🧊`;
     color: var(--accent);
   }
 
+  /* Contenedor principal con el padding superior fijado exactamente a 35px para lograr los 65px uniformes */
   .container {
     max-width: 1150px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 35px 2rem 4rem;
     flex: 1;
     width: 100%;
     box-sizing: border-box;
@@ -407,7 +408,7 @@ const titulo = `Categoría: ${category} - Cubosite 🧊`;
 
   .hero {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
   .hero-top-bar {
@@ -596,6 +597,7 @@ const titulo = `Categoría: ${category} - Cubosite 🧊`;
   }
 
   .footer-col h3, .footer-col h4 {
+    category-color: var(--accent);
     color: var(--accent);
     font-weight: 700;
     margin-top: 0;
