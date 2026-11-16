@@ -19,7 +19,7 @@ export async function getStaticPaths() {
     filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
     return {
-      params: { category: categorySlug },
+      params: { category: category.toLowerCase() }
       props: { category: categorySlug, posts: filteredPosts },
     };
   });
