@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import '../styles/global.css';
 
 const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
@@ -121,7 +122,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.7 Avanzada</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v3.8 Index Fix</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -241,7 +242,6 @@ const titulo = "Cubosite 🧊";
       const searchInputBottom = document.getElementById('searchInputBottom');
       const cardsGrid = document.getElementById('cardsGrid');
       const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
-      const filterButtons = document.querySelectorAll('.filter-btn');
       const noResults = document.getElementById('noResults');
       
       const prevBtn = document.getElementById('prevPageBtn');
@@ -302,8 +302,7 @@ const titulo = "Cubosite 🧊";
           const category = normalizeText(card.getAttribute('data-category'));
           const text = normalizeText(card.textContent);
 
-          const normCurrentCat = normalizeText(currentCategory);
-          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
+          const matchesCategory = true;
           const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
 
           return matchesCategory && matchesSearch;
@@ -349,8 +348,3 @@ const titulo = "Cubosite 🧊";
     </script>
   </body>
 </html>
-
-<style>
-  :root[data-theme="dark"] {
-    --bg-base: #000000;
-    --bg-surface: #
