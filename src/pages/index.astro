@@ -48,8 +48,8 @@ const titulo = "Cubosite 🧊";
     <!-- Contenido Principal -->
     <main class="container">
       <section class="hero">
-        <!-- Forzamos 60px exactos de separación aquí con !important -->
-        <div class="hero-top-bar" style="margin-top: 60px !important;">
+        <!-- Margen ajustado para lograr los 60px exactos de altura visual -->
+        <div class="hero-top-bar" style="margin-top: 20px !important;">
           <div class="theme-switchers">
             <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
             <button class="theme-btn" data-theme-target="light">☀️ Gris Claro</button>
@@ -121,7 +121,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v5.6 Strict 60px Margin</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v5.7 Perfect 60px Height</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -174,3 +174,9 @@ const titulo = "Cubosite 🧊";
             icono = "🌧️";
           } else if (code >= 71 && code <= 77) {
             condicion = "Nevando";
+            icono = "❄️";
+          } else if (code >= 95) {
+            condicion = "Tormenta";
+            icono = "⚡";
+          } else if (code >= 1 && code <= 3) {
+            condicion = "
