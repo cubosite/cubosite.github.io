@@ -5,7 +5,7 @@ export async function getStaticPaths() {
   const posts = await getCollection('posts');
   
   // Normalizar y extraer todas las categorías únicas en minúsculas y sin acentos raros
-  const categories = [...new Set(posts.map(post => {
+  const categories = [...new Set(posts.map(post => post.data.category))];
     const cat = post.data.category || 'general';
     return cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
   }))];
