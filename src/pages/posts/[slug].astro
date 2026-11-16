@@ -34,7 +34,7 @@ const readingTime = Math.ceil(wordCount / 200);
     <!-- 1. Barra de Progreso de Lectura -->
     <div id="readingProgress" class="reading-progress"></div>
 
-    <!-- Barra de Navegación -->
+    <!-- Barra de Navegación con la separación exacta del Index -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
@@ -182,7 +182,7 @@ const readingTime = Math.ceil(wordCount / 200);
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v4.6 GetStaticPaths Fix</strong></p>
+          <p class="update-info">Versión: <strong>v4.7 Navbar Perfect Align</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -202,3 +202,8 @@ const readingTime = Math.ceil(wordCount / 200);
 
     <!-- Scripts del Post -->
     <script>
+      function updateClock() {
+        const clockElement = document.getElementById('liveClock');
+        if (clockElement) {
+          const now = new Date();
+          const timeString = now.toLocaleTimeString('es-ES', { hour: 'numeric', minute: '2-digit', hour12: true });
