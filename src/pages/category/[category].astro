@@ -4,22 +4,29 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   
-  // Extraer todas las categorías únicas de los posts
-  const categories = [...new Set(posts.map(post => post.data.category))];
+  // Normalizar y extraer todas las categorías únicas en minúsculas y sin acentos raros
+  const categories = [...new Set(posts.map(post => {
+    const cat = post.data.category || 'general';
+    return cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+  }))];
 
-  return categories.map(category => {
-    const filteredPosts = posts.filter(post => post.data.category === category);
+  return categories.map(categorySlug => {
+    const filteredPosts = posts.filter(post => {
+      const postCat = (post.data.category || 'general').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+      return postCat === categorySlug;
+    });
+    
     filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
     return {
-      params: { category: category.toLowerCase() },
-      props: { category, posts: filteredPosts },
+      params: { category: categorySlug },
+      props: { category: categorySlug, posts: filteredPosts },
     };
   });
 }
 
 const { category, posts } = Astro.props;
-const titulo = ".::CUBOsite🧊";
+const titulo = `Categoría: ${category} | CUBOsite 🧊`;
 ---
 
 <html lang="es" data-theme="dark">
