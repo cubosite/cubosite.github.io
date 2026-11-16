@@ -472,9 +472,6 @@ main.container, .container {
   padding-top: 35px !important;
 }
 
-.hero-top-bar, .hero {
-  margin-top: 0 !important;
-}
 
 /* --- BLOQUE DE UNIFICACIÓN ESTRICTA A 65PX PARA TODO CUBOSITE --- */
 main.container, 
