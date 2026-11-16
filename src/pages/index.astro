@@ -15,12 +15,13 @@ const titulo = "Cubosite 🧊";
     <meta name="generator" content={Astro.generator} />
     <title>{titulo}</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
   </head>
   <body>
     <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
-        <a href="#" class="logo">Cubosite 🧊</a>
+        <a href="/" class="logo">Cubosite 🧊</a>
         
         <!-- Buscador integrado -->
         <div class="search-box">
@@ -34,14 +35,14 @@ const titulo = "Cubosite 🧊";
 
         <!-- Filtros por categoría -->
         <nav class="nav-links">
-          <a href="#" class="filter-btn active" data-category="todos">Inicio</a>
-          <a href="#terror" class="filter-btn" data-category="Terror">Terror</a>
-          <a href="#comedia" class="filter-btn" data-category="Comedia">Comedia</a>
-          <a href="#ficcion" class="filter-btn" data-category="Ficcion">Ficción</a>
-          <a href="#drama" class="filter-btn" data-category="Drama">Drama</a>
-          <a href="#accion" class="filter-btn" data-category="Accion">Acción</a>
-          <a href="#suspenso" class="filter-btn" data-category="Suspenso">Suspenso</a>
-          <a href="#archivos" class="filter-btn" data-category="+Archivos">+Archivos</a>
+          <a href="/" class="active">Inicio</a>
+          <a href="/category/terror">Terror</a>
+          <a href="/category/comedia">Comedia</a>
+          <a href="/category/ficcion">Ficción</a>
+          <a href="/category/drama">Drama</a>
+          <a href="/category/accion">Acción</a>
+          <a href="/category/suspenso">Suspenso</a>
+          <a href="/category/+archivos">+Archivos</a>
         </nav>
       </div>
     </header>
@@ -90,13 +91,6 @@ const titulo = "Cubosite 🧊";
         <p id="noResults" style="display: none; text-align: center; color: var(--text-muted); margin-top: 2rem;">
           No se encontraron publicaciones en esta categoría o búsqueda 🧊
         </p>
-
-        <!-- Controles de Paginación -->
-        <div class="pagination-container" id="paginationControls">
-          <button id="prevPageBtn" class="page-btn">← Anterior</button>
-          <span id="pageInfo" class="page-info">Página 1 de 1</span>
-          <button id="nextPageBtn" class="page-btn">Siguiente →</button>
-        </div>
       </section>
     </main>
 
@@ -112,16 +106,16 @@ const titulo = "Cubosite 🧊";
         <div class="footer-col">
           <h4>Contacto & Enlaces</h4>
           <ul>
-            <li><a href="#">📩 Soporte / Reportar Error</a></li>
+            <li><a href="/">📩 Soporte / Reportar Error</a></li>
             <li><a href="https://github.com" target="_blank">🐙 Repositorio GitHub</a></li>
-            <li><a href="#">💡 Sugerir Contenido</a></li>
-            <li><a href="#">📜 Manual SKILL.md</a></li>
+            <li><a href="/">💡 Sugerir Contenido</a></li>
+            <li><a href="/">📜 Manual SKILL.md</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.7 Avanzada</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v3.7 Avanzada</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -139,17 +133,13 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Reloj, Clima Dinámico, IP, Temas y Paginación -->
+    <!-- Script de Reloj, Clima, Temas y Búsqueda -->
     <script is:inline>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
           const now = new Date();
-          const timeString = now.toLocaleTimeString('es-ES', { 
-            hour: 'numeric', 
-            minute: '2-digit', 
-            hour12: true 
-          });
+          const timeString = now.toLocaleTimeString('es-ES', { hour: 'numeric', minute: '2-digit', hour12: true });
           clockElement.textContent = `🕒 ${timeString}`;
         }
       }
@@ -158,43 +148,22 @@ const titulo = "Cubosite 🧊";
 
       async function obtenerClima() {
         try {
-          const lat = 4.6097; 
-          const lon = -74.0817;
+          const lat = 4.6097; const lon = -74.0817;
           const res = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current_weather=true`);
           const data = await res.json();
-          
           const temp = Math.round(data.current_weather.temperature);
           const code = data.current_weather.weathercode;
-
-          let condicion = "Despejado";
-          let icono = "☀️";
-
-          if (code >= 51 && code <= 67) {
-            condicion = "Lluvioso";
-            icono = "🌧️";
-          } else if (code >= 71 && code <= 77) {
-            condicion = "Nevando";
-            icono = "❄️";
-          } else if (code >= 95) {
-            condicion = "Tormenta";
-            icono = "⚡";
-          } else if (code >= 1 && code <= 3) {
-            condicion = "Nublado";
-            icono = "☁️";
-          } else if (code === 45 || code === 48) {
-            condicion = "Neblina";
-            icono = "🌫️";
-          }
-
+          let condicion = "Despejado", icono = "☀️";
+          if (code >= 51 && code <= 67) { condicion = "Lluvioso"; icono = "🌧️"; }
+          else if (code >= 71 && code <= 77) { condicion = "Nevando"; icono = "❄️"; }
+          else if (code >= 95) { condicion = "Tormenta"; icono = "⚡"; }
+          else if (code >= 1 && code <= 3) { condicion = "Nublado"; icono = "☁️"; }
+          else if (code === 45 || code === 48) { condicion = "Neblina"; icono = "🌫️"; }
           const elClima = document.getElementById('widget-clima');
-          if (elClima) {
-            elClima.textContent = `${icono} ${temp}°C ${condicion}`;
-          }
+          if (elClima) elClima.textContent = `${icono} ${temp}°C ${condicion}`;
         } catch (e) {
           const elClima = document.getElementById('widget-clima');
-          if (elClima) {
-            elClima.textContent = "⛅ Clima no disponible";
-          }
+          if (elClima) elClima.textContent = "⛅ Clima no disponible";
         }
       }
       obtenerClima();
@@ -203,9 +172,7 @@ const titulo = "Cubosite 🧊";
         .then(response => response.json())
         .then(data => {
           const ipElement = document.getElementById('userIp');
-          if (ipElement) {
-            ipElement.textContent = `🌐 IP: ${data.ip}`;
-          }
+          if (ipElement) ipElement.textContent = `🌐 IP: ${data.ip}`;
         })
         .catch(() => {
           const ipElement = document.getElementById('userIp');
@@ -229,11 +196,8 @@ const titulo = "Cubosite 🧊";
       if (savedTheme) {
         document.documentElement.setAttribute('data-theme', savedTheme);
         themeButtons.forEach(b => {
-          if (b.getAttribute('data-theme-target') === savedTheme) {
-            b.classList.add('active');
-          } else {
-            b.classList.remove('active');
-          }
+          if (b.getAttribute('data-theme-target') === savedTheme) b.classList.add('active');
+          else b.classList.remove('active');
         });
       }
 
@@ -241,122 +205,37 @@ const titulo = "Cubosite 🧊";
       const searchInputBottom = document.getElementById('searchInputBottom');
       const cardsGrid = document.getElementById('cardsGrid');
       const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
-      const filterButtons = document.querySelectorAll('.filter-btn');
       const noResults = document.getElementById('noResults');
-      
-      const prevBtn = document.getElementById('prevPageBtn');
-      const nextBtn = document.getElementById('nextPageBtn');
-      const pageInfo = document.getElementById('pageInfo');
 
-      let currentCategory = 'todos';
-      let currentPage = 1;
-      const itemsPerPage = 24;
-
-      function normalizeText(text) {
-        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
-      }
-
-      filterButtons.forEach(btn => {
-        btn.addEventListener('click', (e) => {
-          e.preventDefault();
-          filterButtons.forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          currentCategory = btn.getAttribute('data-category') || 'todos';
-          currentPage = 1;
-          filterAndPaginate();
+      function filterCards(query) {
+        const term = query.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
+        let visibleCount = 0;
+        cards.forEach(card => {
+          const text = card.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+          if (text.includes(term)) {
+            card.style.display = 'block';
+            visibleCount++;
+          } else {
+            card.style.display = 'none';
+          }
         });
-      });
+        if (noResults) {
+          noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+        }
+      }
 
       if (searchInput) {
-        searchInput.addEventListener('input', () => {
-          if (searchInputBottom) searchInputBottom.value = searchInput.value;
-          currentPage = 1;
-          filterAndPaginate();
+        searchInput.addEventListener('input', (e) => {
+          if (searchInputBottom) searchInputBottom.value = e.target.value;
+          filterCards(e.target.value);
         });
       }
-
       if (searchInputBottom) {
-        searchInputBottom.addEventListener('input', () => {
-          if (searchInput) searchInput.value = searchInputBottom.value;
-          currentPage = 1;
-          filterAndPaginate();
+        searchInputBottom.addEventListener('input', (e) => {
+          if (searchInput) searchInput.value = e.target.value;
+          filterCards(e.target.value);
         });
       }
-
-      if (prevBtn) {
-        prevBtn.addEventListener('click', () => {
-          if (currentPage > 1) {
-            currentPage--;
-            filterAndPaginate();
-            window.scrollTo({ top: 400, behavior: 'smooth' });
-          }
-        });
-      }
-
-      if (nextBtn) {
-        nextBtn.addEventListener('click', () => {
-          const termValue = searchInput ? searchInput.value : '';
-          const filteredCards = getFilteredCards(termValue);
-          const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
-          if (currentPage < totalPages) {
-            currentPage++;
-            filterAndPaginate();
-            window.scrollTo({ top: 400, behavior: 'smooth' });
-          }
-        });
-      }
-
-      function getFilteredCards(termValue) {
-        const searchTerm = normalizeText(termValue);
-        return cards.filter(card => {
-          const title = normalizeText(card.getAttribute('data-title'));
-          const category = normalizeText(card.getAttribute('data-category'));
-          const text = normalizeText(card.textContent);
-
-          const normCurrentCat = normalizeText(currentCategory);
-          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
-          const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
-
-          return matchesCategory && matchesSearch;
-        });
-      }
-
-      function filterAndPaginate() {
-        const termValue = searchInput ? searchInput.value : '';
-        const filteredCards = getFilteredCards(termValue);
-        const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
-
-        if (currentPage > totalPages) currentPage = totalPages;
-        if (currentPage < 1) currentPage = 1;
-
-        cards.forEach(card => card.style.display = 'none');
-
-        const startIndex = (currentPage - 1) * itemsPerPage;
-        const endIndex = startIndex + itemsPerPage;
-        const cardsToShow = filteredCards.slice(startIndex, endIndex);
-
-        cardsToShow.forEach(card => {
-          card.style.display = 'block';
-        });
-
-        if (noResults) {
-          noResults.style.display = filteredCards.length === 0 ? 'block' : 'none';
-        }
-
-        if (pageInfo) {
-          pageInfo.textContent = `Página ${currentPage} de ${totalPages}`;
-        }
-        if (prevBtn) {
-          prevBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
-          prevBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
-        }
-        if (nextBtn) {
-          nextBtn.style.opacity = currentPage === totalPages || totalPages === 0 ? '0.4' : '1';
-          nextBtn.style.cursor = currentPage === totalPages || totalPages === 0 ? 'not-allowed' : 'pointer';
-        }
-      }
-
-      filterAndPaginate();
     </script>
   </body>
 </html>
@@ -479,7 +358,7 @@ const titulo = "Cubosite 🧊";
   .container {
     max-width: 1150px;
     margin: 0 auto;
-    padding: 4rem 2rem;
+    padding: 15px 2rem 4rem !important;
     flex: 1;
     width: 100%;
     box-sizing: border-box;
@@ -487,7 +366,7 @@ const titulo = "Cubosite 🧊";
 
   .hero {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: 2rem;
   }
 
   .hero-top-bar {
@@ -638,39 +517,6 @@ const titulo = "Cubosite 🧊";
     font-size: 0.75rem;
     color: var(--text-muted);
     opacity: 0.8;
-  }
-
-  .pagination-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5rem;
-    margin-top: 3rem;
-    margin-bottom: 2rem;
-  }
-
-  .page-btn {
-    background-color: var(--bg-card);
-    border: 1px solid var(--border-color);
-    color: var(--accent);
-    font-weight: 700;
-    padding: 0.6rem 1.25rem;
-    border-radius: 9999px;
-    font-size: 0.9rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-
-  .page-btn:hover {
-    background-color: var(--accent);
-    color: #000000;
-    border-color: var(--accent);
-  }
-
-  .page-info {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    font-weight: 600;
   }
 
   .footer-advanced {
