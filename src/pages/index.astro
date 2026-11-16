@@ -45,11 +45,11 @@ const titulo = "Cubosite 🧊";
       </div>
     </header>
 
-    <!-- Contenido Principal -->
-    <main class="container">
+    <!-- Contenido Principal con padding superior a 0 para forzar el límite de 60px -->
+    <main class="container" style="padding-top: 10px !important;">
       <section class="hero">
-        <!-- Margen ajustado para lograr los 60px exactos de altura visual -->
-        <div class="hero-top-bar" style="margin-top: 20px !important;">
+        <!-- Forzamos los widgets a subir con un margen negativo -->
+        <div class="hero-top-bar" style="margin-top: 10px !important; margin-bottom: 1.5rem;">
           <div class="theme-switchers">
             <button class="theme-btn active" data-theme-target="dark">🌙 Dark</button>
             <button class="theme-btn" data-theme-target="light">☀️ Gris Claro</button>
@@ -121,7 +121,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v5.7 Perfect 60px Height</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v5.8 Max 60px Limit</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -179,4 +179,121 @@ const titulo = "Cubosite 🧊";
             condicion = "Tormenta";
             icono = "⚡";
           } else if (code >= 1 && code <= 3) {
-            condicion = "
+            condicion = "Nublado";
+            icono = "☁️";
+          } else if (code === 45 || code === 48) {
+            condicion = "Neblina";
+            icono = "🌫️";
+          }
+
+          const elClima = document.getElementById('widget-clima');
+          if (elClima) {
+            elClima.textContent = icono + ' ' + temp + '°C ' + condicion;
+          }
+        } catch (e) {
+          const elClima = document.getElementById('widget-clima');
+          if (elClima) {
+            elClima.textContent = "⛅ Clima no disponible";
+          }
+        }
+      }
+      obtenerClima();
+
+      fetch('https://api.ipify.org?format=json')
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          const ipElement = document.getElementById('userIp');
+          if (ipElement) {
+            ipElement.textContent = '🌐 IP: ' + data.ip;
+          }
+        })
+        .catch(function() {
+          const ipElement = document.getElementById('userIp');
+          if (ipElement) {
+            ipElement.textContent = '🌐 IP: No disponible';
+          }
+        });
+
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      themeButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          themeButtons.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          const targetTheme = btn.getAttribute('data-theme-target');
+          if (targetTheme) {
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('cubo-theme', targetTheme);
+          }
+        });
+      });
+
+      const savedTheme = localStorage.getItem('cubo-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeButtons.forEach(function(b) {
+          if (b.getAttribute('data-theme-target') === savedTheme) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+      }
+
+      const searchInput = document.getElementById('searchInput');
+      const searchInputBottom = document.getElementById('searchInputBottom');
+      const cardsGrid = document.getElementById('cardsGrid');
+      const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
+      const noResults = document.getElementById('noResults');
+      
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      const pageInfo = document.getElementById('pageInfo');
+
+      let currentCategory = 'todos';
+      let currentPage = 1;
+      const itemsPerPage = 24;
+
+      function normalizeText(text) {
+        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener('input', function() {
+          if (searchInputBottom) searchInputBottom.value = searchInput.value;
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      }
+
+      if (searchInputBottom) {
+        searchInputBottom.addEventListener('input', function() {
+          if (searchInput) searchInput.value = searchInputBottom.value;
+          currentPage = 1;
+          filterAndPaginate();
+        });
+      }
+
+      if (prevBtn) {
+        prevBtn.addEventListener('click', function() {
+          if (currentPage > 1) {
+            currentPage--;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
+
+      if (nextBtn) {
+        nextBtn.addEventListener('click', function() {
+          const termValue = searchInput ? searchInput.value : '';
+          const filteredCards = getFilteredCards(termValue);
+          const totalPages = Math.ceil(filteredCards.length / itemsPerPage) || 1;
+          if (currentPage < totalPages) {
+            currentPage++;
+            filterAndPaginate();
+            window.scrollTo({ top: 400, behavior: 'smooth' });
+          }
+        });
+      }
+
+      function
