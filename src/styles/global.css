@@ -466,3 +466,12 @@ h1 {
   font-size: 0.8rem;
   color: var(--text-muted);
 }
+
+/* Forzar 65px de espacio exacto entre la barra de navegación fija y los widgets en todo Cubosite */
+main.container, .container {
+  padding-top: 35px !important;
+}
+
+.hero-top-bar, .hero {
+  margin-top: 0 !important;
+}
