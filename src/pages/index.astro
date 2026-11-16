@@ -1,30 +1,375 @@
+o---
 ---
 import { getCollection } from 'astro:content';
 
-export async function getStaticPaths() {
-  const posts = await getCollection('posts');
-  
-  // Normalizar y extraer todas las categorías únicas en minúsculas y sin acentos raros
-  const categories = [...new Set(posts.map(post => {
-    const cat = post.data.category || 'general';
-    return cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-  }))];
+const posts = await getCollection('posts');
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
-  return categories.map(categorySlug => {
-    const filteredPosts = posts.filter(post => {
-      const postCat = (post.data.category || 'general').normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-      return postCat === categorySlug;
-    });
-    
-    filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-
-    return {
-      params: { category: categorySlug },
-      props: { category: categorySlug, posts: filteredPosts },
-    };
-  });
-}
-
-const { category, posts } = Astro.props;
-const titulo = `Categoría: ${category} | CUBOsite 🧊`;
+const titulo = "🧊CUBO SITE::";
+const titulo = "Cubosite 🧊";
 ---
+
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{titulo}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+
+
+ <!-- Barra de Navegación -->
+    <!-- Barra de Navegación -->
+    <header class="navbar">
+      <div class="nav-container">
+        <a href="#" class="logo">Cubosite 🧊</a>
+
+        <!-- Buscador integrado -->
+        <div class="search-box">
+          <input 
+            type="text" 
+            id="searchInput" 
+            placeholder="🔍 Buscar publicaciones..." 
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Filtros por categoría (Incluyendo +Archivos) -->
+        <!-- Filtros por categoría -->
+        <nav class="nav-links">
+          <a href="#" class="filter-btn active" data-category="todos">Inicio</a>
+          <a href="#terror" class="filter-btn" data-category="Terror">Terror</a>
+          <a href="#comedia" class="filter-btn" data-category="Comedia">Comedia</a>
+          <a href="#ficcion" class="filter-btn" data-category="Ficcion">Ficción</a>
+          <a href="#drama" class="filter-btn" data-category="Drama">Drama</a>
+          <a href="#accion" class="filter-btn" data-category="Accion">Acción</a>
+          <a href="#accion" class="filter-btn" data-category="Suspenso">Suspenso</a>
+          <a href="#archivos" class="filter-btn" data-category="+Archivos">+Archivos</a>
+        </nav>
+      </div>
+    </header>
+
+
+    <!-- Contenido Principal -->
+    <main class="container">
+      <section class="hero">
+        <span class="badge">Modo Dark Activado 🌙</span>
+        <h1>Bitácora y Exploración Digital</h1>
+        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
+      </section>
+
+      <!-- Secciones de Contenido Dinámico -->
+      <section class="content-section">
+        <h2>Últimas Publicaciones</h2>
+
+        <div class="grid" id="cardsGrid">
+          {posts.map((post) => (
+            <article class="card" data-title={post.data.title} data-category={post.data.category}>
+              <span class="tag">{post.data.category}</span>
+              <h3>
+                <a href={`/posts/${post.slug}`} class="card-link">
+                  {post.data.title}
+                </a>
+              </h3>
+              <p>{post.data.description}</p>
+              <span class="date">
+                Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </span>
+            </article>
+          ))}
+        </div>
+
+        <!-- Mensaje si no hay resultados -->
+        <p id="noResults" style="display: none; text-align: center; color: var(--text-muted); margin-top: 2rem;">
+          No se encontraron publicaciones en esta categoría o búsqueda 🧊
+        </p>
+      </section>
+
+      <footer>
+        <p>Hecho por🧊CuBo 2026. Todos los derechos reservados.</p>
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+      </footer>
+    </main>
+
+    <!-- Script de filtrado inteligente -->
+    <script>
+      const searchInput = document.getElementById('searchInput') as HTMLInputElement;
+      const cardsGrid = document.getElementById('cardsGrid');
+      const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
+      const filterButtons = document.querySelectorAll('.filter-btn');
+      const noResults = document.getElementById('noResults');
+
+      let currentCategory = 'todos';
+
+      function normalizeText(text: string) {
+        return text ? text.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim() : "";
+      }
+
+      filterButtons.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          filterButtons.forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentCategory = btn.getAttribute('data-category') || 'todos';
+          filterCards();
+        });
+      });
+
+      if (searchInput) {
+        searchInput.addEventListener('input', () => {
+          filterCards();
+        });
+      }
+
+      function filterCards() {
+        const searchTerm = searchInput ? normalizeText(searchInput.value) : '';
+        let visibleCount = 0;
+
+        cards.forEach(card => {
+          const title = normalizeText(card.getAttribute('data-title'));
+          const category = normalizeText(card.getAttribute('data-category'));
+          const text = normalizeText(card.textContent);
+
+          const normCurrentCat = normalizeText(currentCategory);
+          const matchesCategory = (currentCategory === 'todos' || category === normCurrentCat);
+          const matchesSearch = (title.includes(searchTerm) || category.includes(searchTerm) || text.includes(searchTerm));
+
+          if (matchesCategory && matchesSearch) {
+            (card as HTMLElement).style.display = 'block';
+            visibleCount++;
+          } else {
+            (card as HTMLElement).style.display = 'none';
+          }
+        });
+
+        if (noResults) {
+          if (visibleCount === 0) {
+            noResults.style.display = 'block';
+          } else {
+            noResults.style.display = 'none';
+          }
+        }
+      }
+    </script>
+  </body>
+</html>
+
+<style>
+  :root {
+    --bg-base: #030712;
+    --bg-surface: #0b0f19;
+    --bg-card: #111827;
+    --border-color: #1e293b;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --accent: #38bdf8;
+    --accent-glow: rgba(56, 189, 248, 0.1);
+  }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-main);
+    margin: 0;
+    padding: 0;
+  }
+
+  .navbar {
+    background-color: rgba(3, 7, 18, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    padding: 1rem 2rem;
+  }
+
+  .nav-container {
+    max-width: 1000px;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--text-main);
+    text-decoration: none;
+  }
+
+  .search-box input {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    outline: none;
+    width: 200px;
+    width: 180px;
+    transition: all 0.2s ease;
+  }
+
+  .search-box input:focus {
+    border-color: var(--accent);
+    width: 250px;
+    width: 230px;
+    box-shadow: 0 0 10px var(--accent-glow);
+  }
+
+  .search-box input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 1.5rem;
+    gap: 1.2rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: color 0.2s ease;
+    cursor: pointer;
+  }
+
+  .nav-links a:hover, .nav-links a.active {
+    color: var(--accent);
+  }
+
+  /* Ampliamos el contenedor principal para que quepan bien las 4 columnas */
+  .container {
+    max-width: 900px;
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 4rem 2rem;
+  }
+
+  .hero {
+    text-align: center;
+    margin-bottom: 3rem;
+  }
+
+  .badge {
+    background-color: var(--accent-glow);
+    color: var(--accent);
+    padding: 0.35rem 0.85rem;
+    border-radius: 9999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    margin: 1.2rem 0 1rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  .hero p {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .content-section {
+    margin-bottom: 4rem;
+  }
+
+  .content-section h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+  }
+
+  /* Cambiamos minmax a 220px para forzar que entren 4 tarjetas en pantallas grandes */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 0.75rem;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(56, 189, 248, 0.4);
+  }
+
+  .card-link {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .card-link:hover {
+    color: var(--accent);
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--accent);
+    font-weight: 700;
+    background-color: var(--accent-glow);
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    display: inline-block;
+    margin-bottom: 0.75rem;
+  }
+
+  .card h3 {
+    margin: 0 0 0.5rem;
+    font-size: 1.15rem;
+    font-size: 1.1rem;
+  }
+
+  .card p {
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    margin: 0 0 1rem;
+  }
+
+  .date {
+    font-size: 0.75rem;
+    color: #64748b;
+  }
+
+  footer {
+    text-align: center;
+    color: #64748b;
+    font-size: 0.85rem;
+    border-top: 1px solid var(--border-color);
+    padding-top: 2rem;
+  }
+</style>
