@@ -18,7 +18,7 @@ const titulo = "Cubosite 🧊";
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
   </head>
   <body>
-    <!-- Barra de Navegación idéntica a [slug].astro -->
+    <!-- Barra de Navegación con distancia reducida -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
@@ -120,7 +120,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v4.9 Perfect Navbar Align</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v5.0 Compact Navbar</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -350,24 +350,8 @@ const titulo = "Cubosite 🧊";
 </html>
 
 <style>
-  /* Sincronización idéntica de la barra de navegación con [slug].astro */
+  /* Forzamos el contenedor para que agrupe los elementos con la distancia compacta de [slug].astro */
   .navbar {
     background-color: var(--bg-surface);
     backdrop-filter: blur(10px);
-    border-bottom: 1px solid var(--border-color);
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    padding: 1rem 2rem;
-  }
-
-  .nav-container {
-    max-width: 100%;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 1rem;
-  }
-</style>
+    border-bottom: 1px
