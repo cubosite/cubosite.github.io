@@ -1,7 +1,7 @@
 ---
-title: "prueba 11"
+title: "prueba 12"
 date: 2026-11-13
-category: "+Archivos"
+category: "suspenso"
 description: "Una mirada profunda al tráiler y análisis de la obra maestra de Nolan."
 ---
 
