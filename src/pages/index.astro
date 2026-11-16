@@ -45,8 +45,8 @@ const titulo = "Cubosite 🧊";
       </div>
     </header>
 
-    <!-- Contenido Principal -->
-    <main class="container">
+    <!-- Contenido Principal con separación exacta de 60px -->
+    <main class="container" style="padding-top: 60px;">
       <section class="hero">
         <div class="hero-top-bar">
           <div class="theme-switchers">
@@ -120,7 +120,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v5.4 Final Layout</strong> (24/pág)</p>
+          <p class="update-info">Versión: <strong>v5.5 60px Spacing</strong> (24/pág)</p>
           
           <div class="footer-search-box">
             <input 
@@ -179,4 +179,71 @@ const titulo = "Cubosite 🧊";
             icono = "⚡";
           } else if (code >= 1 && code <= 3) {
             condicion = "Nublado";
-            icono = "
+            icono = "☁️";
+          } else if (code === 45 || code === 48) {
+            condicion = "Neblina";
+            icono = "🌫️";
+          }
+
+          const elClima = document.getElementById('widget-clima');
+          if (elClima) {
+            elClima.textContent = icono + ' ' + temp + '°C ' + condicion;
+          }
+        } catch (e) {
+          const elClima = document.getElementById('widget-clima');
+          if (elClima) {
+            elClima.textContent = "⛅ Clima no disponible";
+          }
+        }
+      }
+      obtenerClima();
+
+      fetch('https://api.ipify.org?format=json')
+        .then(function(response) { return response.json(); })
+        .then(function(data) {
+          const ipElement = document.getElementById('userIp');
+          if (ipElement) {
+            ipElement.textContent = '🌐 IP: ' + data.ip;
+          }
+        })
+        .catch(function() {
+          const ipElement = document.getElementById('userIp');
+          if (ipElement) {
+            ipElement.textContent = '🌐 IP: No disponible';
+          }
+        });
+
+      const themeButtons = document.querySelectorAll('.theme-btn');
+      themeButtons.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          themeButtons.forEach(function(b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          const targetTheme = btn.getAttribute('data-theme-target');
+          if (targetTheme) {
+            document.documentElement.setAttribute('data-theme', targetTheme);
+            localStorage.setItem('cubo-theme', targetTheme);
+          }
+        });
+      });
+
+      const savedTheme = localStorage.getItem('cubo-theme');
+      if (savedTheme) {
+        document.documentElement.setAttribute('data-theme', savedTheme);
+        themeButtons.forEach(function(b) {
+          if (b.getAttribute('data-theme-target') === savedTheme) {
+            b.classList.add('active');
+          } else {
+            b.classList.remove('active');
+          }
+        });
+      }
+
+      const searchInput = document.getElementById('searchInput');
+      const searchInputBottom = document.getElementById('searchInputBottom');
+      const cardsGrid = document.getElementById('cardsGrid');
+      const cards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
+      const noResults = document.getElementById('noResults');
+      
+      const prevBtn = document.getElementById('prevPageBtn');
+      const nextBtn = document.getElementById('nextPageBtn');
+      const pageInfo = document.getElementById('page
