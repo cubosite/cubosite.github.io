@@ -1,4 +1,40 @@
-<!-- Barra de Navegación -->
+---
+import { getCollection } from 'astro:content';
+import '../../styles/global.css';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((post) => ({
+    params: { slug: post.slug },
+    props: { 
+      post, 
+      relatedPosts: posts
+        .filter(p => p.slug !== post.slug && p.data.category === post.data.category)
+        .slice(0, 3) 
+    },
+  }));
+}
+
+const { post, relatedPosts } = Astro.props;
+const { Content, headings } = await post.render();
+
+const plainText = post.body || "";
+const wordCount = plainText.split(/\s+/g).length;
+const readingTime = Math.ceil(wordCount / 200);
+---
+
+<html lang="es" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{post.data.title} - Cubosite 🧊</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <!-- 1. Barra de Progreso de Lectura -->
+    <div id="readingProgress" class="reading-progress"></div>
+
+    <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
         <a href="/" class="logo">Cubosite 🧊</a>
@@ -12,7 +48,6 @@
           />
         </div>
 
-        <!-- Enlaces con rutas limpias exactas idénticas al index -->
         <nav class="nav-links">
           <a href="/">Inicio</a>
           <a href="/category/terror">Terror</a>
@@ -48,3 +83,122 @@
        <h1>Bitácora y Exploración Digital</h1>
        <p>Un espacio propio para almacenar películas, videos, reflexiones y noticias sin depender de plataformas corporativas.</p>
       </section>
+
+      <!-- Tarjeta del Artículo -->
+      <section class="content-section">
+        <article class="post-container">
+          <a href={`/category/${post.data.category.toLowerCase()}`} class="tag" style="text-decoration: none;">{post.data.category}</a>
+          <h1 class="post-title">{post.data.title}</h1>
+          
+          <div class="post-meta-info">
+            <span class="date">📅 {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+            <span class="dot">•</span>
+            <span class="read-time">⏱️ {readingTime} min lectura</span>
+            
+            <!-- Controles de Tamaño de Texto (A- / A+) -->
+            <div class="font-sizer">
+              <span class="sizer-label">Texto:</span>
+              <button id="fontDecrease" class="sizer-btn" title="Reducir texto">A-</button>
+              <button id="fontReset" class="sizer-btn" title="Restaurar tamaño">Normal</button>
+              <button id="fontIncrease" class="sizer-btn" title="Aumentar texto">A+</button>
+            </div>
+          </div>
+
+          <!-- Tabla de Contenidos (TOC) -->
+          {headings.length > 0 && (
+            <div class="toc-box">
+              <h3>Índice de Contenido</h3>
+              <ul>
+                {headings.map((h) => (
+                  <li><a href={`#${h.slug}`}>{h.text}</a></li>
+                ))}
+              </ul>
+            </div>
+          )}
+
+          <!-- Contenido del Post -->
+          <div class="post-content" id="postContentArea">
+            <Content />
+          </div>
+
+          <!-- Sistema de Reacciones y Copiar Enlace -->
+          <div class="post-actions-bar">
+            <button id="likeBtn" class="action-btn">
+              🧊 Reaccionar (<span id="likeCount">0</span>)
+            </button>
+            <button id="shareBtn" class="action-btn">
+              🔗 Copiar Enlace
+            </button>
+          </div>
+          <p id="copyToast" class="toast-msg" style="display: none;">¡Enlace copiado al portapapeles con éxito! 🧊</p>
+
+          <div style="margin-top: 2.5rem; border-top: 1px solid var(--border-color); padding-top: 1.5rem;">
+            <a href="/" class="btn-back">← Volver a todas las publicaciones</a>
+          </div>
+        </article>
+
+        <!-- Artículos Relacionados -->
+        {relatedPosts.length > 0 && (
+          <div class="related-section">
+            <h3>Artículos Relacionados en {post.data.category}</h3>
+            <div class="related-grid">
+              {relatedPosts.map((rel) => (
+                <a href={`/posts/${rel.slug || rel.id}`} class="related-card">
+                  <h4>{rel.data.title}</h4>
+                  <p>{rel.data.description}</p>
+                  <span class="date">{rel.data.date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
+      </section>
+    </main>
+
+    <!-- Botón Flotante de Teletransporte y Glitch -->
+    <button id="teleportBtn" class="teleport-float-btn" title="¡Teletransporte aleatorio! 🎲">
+      🎲 Teletransporte
+    </button>
+    <div id="glitchOverlay" class="glitch-overlay"></div>
+
+    <!-- Footer Avanzado -->
+    <footer class="footer-advanced">
+      <div class="footer-container">
+        <div class="footer-col">
+          <h3>Cubosite 🧊</h3>
+          <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
+          <span class="footer-badge">Estado: 100% Operativo 🚀</span>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contacto & Enlaces</h4>
+          <ul>
+            <li><a href="/">📩 Soporte / Reportar Error</a></li>
+            <li><a href="https://github.com" target="_blank">🐙 Repositorio GitHub</a></li>
+            <li><a href="/">💡 Sugerir Contenido</a></li>
+            <li><a href="/">📜 Manual SKILL.md</a></li>
+          </ul>
+        </div>
+
+        <div class="footer-col">
+          <h4>Actualizaciones & Búsqueda</h4>
+          <p class="update-info">Versión: <strong>v4.6 GetStaticPaths Fix</strong></p>
+          
+          <div class="footer-search-box">
+            <input 
+              type="text" 
+              id="searchInputBottom" 
+              placeholder="🔍 Búsqueda rápida abajo..." 
+              autocomplete="off"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+
+    <!-- Scripts del Post -->
+    <script>
