@@ -26,10 +26,10 @@ const readingTime = Math.ceil(wordCount / 200);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{post.data.title} .::CUBOsite🧊</title>
+    <title>{post.data.title} .::CUBOsite 🧊</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧊</text></svg>">
-</head>
+  </head>
   <body>
     <!-- 1. Barra de Progreso de Lectura -->
     <div id="readingProgress" class="reading-progress"></div>
@@ -37,7 +37,7 @@ const readingTime = Math.ceil(wordCount / 200);
     <!-- Barra de Navegación -->
     <header class="navbar">
       <div class="nav-container">
-        <a href="/" class="logo">CUBOsite🧊</a>
+        <a href="/" class="logo">CUBOsite 🧊</a>
         
         <div class="search-box">
           <input 
@@ -159,7 +159,7 @@ const readingTime = Math.ceil(wordCount / 200);
     <footer class="footer-advanced">
       <div class="footer-container">
         <div class="footer-col">
-          <h3>.::CUBOsite🧊</h3>
+          <h3>.::CUBOsite 🧊</h3>
           <p>Plataforma web multitema construida con Astro SSG y desplegada de forma independiente. Contenido autogestionado por Cubo.</p>
           <span class="footer-badge">Estado: 100% Operativo 🚀</span>
         </div>
@@ -190,13 +190,12 @@ const readingTime = Math.ceil(wordCount / 200);
       </div>
 
       <div class="footer-bottom">
-        <p>Hecho por 🧊CuBo 2026. Todos los derechos reservados.</p>
+        <p>Hecho por 🧊 CuBo 2026. Todos los derechos reservados.</p>
       </div>
     </footer>
 
     <!-- Scripts -->
     <script>
-      // 1. Reloj
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
         if (clockElement) {
@@ -208,7 +207,6 @@ const readingTime = Math.ceil(wordCount / 200);
       setInterval(updateClock, 1000);
       updateClock();
 
-      // 2. Clima Open-Meteo
       async function obtenerClima() {
         try {
           const lat = 4.6097; const lon = -74.0817;
@@ -231,7 +229,6 @@ const readingTime = Math.ceil(wordCount / 200);
       }
       obtenerClima();
 
-      // 3. IP
       fetch('https://api.ipify.org?format=json')
         .then(response => response.json())
         .then(data => {
@@ -243,7 +240,6 @@ const readingTime = Math.ceil(wordCount / 200);
           if (ipElement) ipElement.textContent = `🌐 IP: No disponible`;
         });
 
-      // 4. Barra de Progreso de Lectura
       window.addEventListener('scroll', () => {
         const winScroll = document.documentElement.scrollTop || document.body.scrollTop;
         const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
@@ -252,7 +248,6 @@ const readingTime = Math.ceil(wordCount / 200);
         if (progressBar) progressBar.style.width = scrolled + '%';
       });
 
-      // 5. Selector de Tamaño de Texto (A- / Normal / A+)
       const contentArea = document.getElementById('postContentArea');
       const fontDec = document.getElementById('fontDecrease');
       const fontRes = document.getElementById('fontReset');
@@ -276,7 +271,6 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
-      // 6. Reacciones con Cubitos 🧊
       const postSlug = window.location.pathname;
       const likeKey = `cubo_likes_${postSlug}`;
       let currentLikes = parseInt(localStorage.getItem(likeKey)) || 12;
@@ -294,7 +288,6 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
-      // 7. Botón Copiar Enlace
       const shareBtn = document.getElementById('shareBtn');
       const copyToast = document.getElementById('copyToast');
       if (shareBtn) {
@@ -307,7 +300,6 @@ const readingTime = Math.ceil(wordCount / 200);
         });
       }
 
-      // 8. Temas
       const themeButtons = document.querySelectorAll('.theme-btn');
       themeButtons.forEach(btn => {
         btn.addEventListener('click', () => {
@@ -601,7 +593,6 @@ const readingTime = Math.ceil(wordCount / 200);
     flex-wrap: wrap;
   }
 
-  /* Estilos del selector de tamaño de texto */
   .font-sizer {
     display: flex;
     align-items: center;
