@@ -4,6 +4,7 @@ import { getCollection } from 'astro:content';
 export async function getStaticPaths() {
   const posts = await getCollection('posts');
   
+  // Normalizar y extraer todas las categorías únicas en minúsculas y sin acentos
   const categories = [...new Set(posts.map(post => {
     const cat = post.data.category || 'general';
     return cat.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
@@ -15,7 +16,7 @@ export async function getStaticPaths() {
       return postCat === categorySlug;
     });
     
-    filteredPosts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
+    filteredPosts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
     return {
       params: { category: categorySlug },
@@ -104,7 +105,7 @@ const titulo = `Categoría: ${category} | CUBOsite 🧊`;
               <h3>{post.data.title}</h3>
               <p>{post.data.description}</p>
               <span class="date">
-                Publicado el {new Date(post.data.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+                Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
               </span>
             </a>
           ))}
