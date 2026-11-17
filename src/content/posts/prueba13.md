@@ -1,6 +1,6 @@
 ---
-title: "prueba 13"
-date: 2026-11-13
+title: "prueba 13333"
+date: 2026-11-16
 category: "suspenso"
 description: "Una mirada profunda al tráiler y análisis de la obra maestra de Nolan."
 ---
