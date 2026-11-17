@@ -121,7 +121,7 @@ const titulo = "Cubosite 🧊";
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v3.11 All-in-One</strong></p>
+          <p class="update-info">Versión: <strong>v3.12 Fixed</strong></p>
           
           <div class="footer-search-box">
             <input 
@@ -139,7 +139,7 @@ const titulo = "Cubosite 🧊";
       </div>
     </footer>
 
-    <!-- Script de Reloj, Clima, Temas, Búsqueda y Paginación (24 por página) -->
+    <!-- Script de Reloj, Clima, Temas, Búsqueda y Paginación Robusta -->
     <script is:inline>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -207,7 +207,7 @@ const titulo = "Cubosite 🧊";
         });
       }
 
-      // --- LÓGICA DE PAGINACIÓN (24 ARTÍCULOS POR PÁGINA) Y BÚSQUEDA ---
+      // --- LÓGICA DE PAGINACIÓN Y BÚSQUEDA ROBUSTA ---
       const ITEMS_PER_PAGE = 24;
       let currentPage = 1;
       let currentSearchTerm = '';
@@ -237,9 +237,14 @@ const titulo = "Cubosite 🧊";
         const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
         const endIndex = startIndex + ITEMS_PER_PAGE;
 
-        allCards.forEach(card => card.style.display = 'none');
+        // Ocultar todas las tarjetas primero con clase o display none
+        allCards.forEach(card => {
+          card.style.display = 'none';
+        });
 
-        matchingCards.slice(startIndex, endIndex).forEach(card => {
+        // Mostrar solo las de la página actual
+        const currentBatch = matchingCards.slice(startIndex, endIndex);
+        currentBatch.forEach(card => {
           card.style.display = 'flex';
         });
 
@@ -253,22 +258,20 @@ const titulo = "Cubosite 🧊";
           } else {
             paginationControls.style.display = 'flex';
             if (pageIndicator) pageIndicator.textContent = `Página ${currentPage} de ${totalPages}`;
+            
             if (prevPageBtn) {
-              prevPageBtn.disabled = currentPage === 1;
-              prevPageBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
-              prevPageBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
+              prevPageBtn.disabled = currentPage <= 1;
             }
             if (nextPageBtn) {
-              nextPageBtn.disabled = currentPage === totalPages;
-              nextPageBtn.style.opacity = currentPage === totalPages ? '0.4' : '1';
-              nextPageBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
+              nextPageBtn.disabled = currentPage >= totalPages;
             }
           }
         }
       }
 
       if (prevPageBtn) {
-        prevPageBtn.addEventListener('click', () => {
+        prevPageBtn.addEventListener('click', (e) => {
+          e.preventDefault();
           if (currentPage > 1) {
             currentPage--;
             renderPosts();
@@ -278,7 +281,8 @@ const titulo = "Cubosite 🧊";
       }
 
       if (nextPageBtn) {
-        nextPageBtn.addEventListener('click', () => {
+        nextPageBtn.addEventListener('click', (e) => {
+          e.preventDefault();
           const term = currentSearchTerm.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
           const matchingCount = allCards.filter(c => c.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(term)).length;
           const totalPages = Math.ceil(matchingCount / ITEMS_PER_PAGE);
@@ -309,6 +313,7 @@ const titulo = "Cubosite 🧊";
         });
       }
 
+      // Ejecutar render inicial
       renderPosts();
     </script>
   </body>
@@ -534,7 +539,7 @@ const titulo = "Cubosite 🧊";
   }
 
   .card {
-    display: flex;
+    display: none; /* Controlado por JS para la paginación */
     flex-direction: column;
     width: 100%;
     background-color: var(--bg-card);
@@ -621,7 +626,114 @@ const titulo = "Cubosite 🧊";
     border-color: var(--accent);
   }
 
+  .page-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
   .page-info {
     color: var(--text-muted);
     font-size: 0.9rem;
     font-weight: 600;
+  }
+
+  /* --- FOOTER AVANZADO (DISEÑO RESTAURADO) --- */
+  .footer-advanced {
+    background-color: var(--bg-surface);
+    border-top: 1px solid var(--border-color);
+    color: var(--text-muted);
+    margin-top: auto;
+    padding: 3rem 2rem 1.5rem;
+  }
+
+  .footer-container {
+    max-width: 1150px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .footer-col h3, .footer-col h4 {
+    color: var(--accent);
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+  }
+
+  .footer-col p {
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    color: var(--text-main);
+  }
+
+  .footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .footer-col ul li {
+    margin-bottom: 0.6rem;
+  }
+
+  .footer-col ul li a {
+    color: var(--text-muted);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: color 0.2s ease;
+  }
+
+  .footer-col ul li a:hover {
+    color: var(--accent);
+  }
+
+  .footer-badge {
+    display: inline-block;
+    background-color: var(--accent-glow);
+    color: var(--accent);
+    padding: 0.25rem 0.6rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border: 1px solid var(--border-color);
+  }
+
+  .update-info {
+    font-size: 0.85rem;
+    margin-bottom: 0.75rem;
+    color: var(--text-main);
+  }
+
+  .footer-search-box input {
+    width: 100%;
+    background-color: var(--bg-base);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 0.5rem 1rem;
+    border-radius: 9999px;
+    font-size: 0.85rem;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s ease;
+  }
+
+  .footer-search-box input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 8px var(--accent-glow);
+  }
+
+  .footer-bottom {
+    max-width: 1150px;
+    margin: 0 auto;
+    border-top: 1px solid var(--border-color);
+    padding-top: 1.5rem;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+</style>
