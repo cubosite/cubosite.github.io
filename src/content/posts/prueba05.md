@@ -1,5 +1,5 @@
 ---
-title: "ARCHIVOS"
+title: "ficcion 888"
 date: 2026-11-16
 category: "Ficcion"
 description: "Una mirada profunda al tráiler y análisis de la obra maestra de Nolan."
