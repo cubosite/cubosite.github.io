@@ -2,13 +2,7 @@
 import { getCollection } from 'astro:content';
 
 const posts = await getCollection('posts');
-posts.sort((a, b) => new Date(b.data.date).valueOf() - new Date(a.data.date).valueOf());
-
-// Calcular estadísticas automáticas de la bitácora
-const totalPosts = posts.length;
-const totalWords = posts.reduce((acc, post) => acc + (post.body ? post.body.split(/\s+/g).length : 500), 0);
-const totalReadingMinutes = Math.ceil(totalWords / 200);
-const buildDateStr = new Date().toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' });
+posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
 
 const titulo = "Cubosite 🧊";
 ---
@@ -33,7 +27,7 @@ const titulo = "Cubosite 🧊";
           <input 
             type="text" 
             id="searchInput" 
-            placeholder="🔍 Buscar (Ctrl+K)..." 
+            placeholder="🔍 Buscar publicaciones..." 
             autocomplete="off"
           />
         </div>
@@ -86,7 +80,7 @@ const titulo = "Cubosite 🧊";
               <h3>{post.data.title}</h3>
               <p>{post.data.description}</p>
               <span class="date">
-                Publicado el {new Date(post.data.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}
+                Publicado el {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
               </span>
             </a>
           ))}
@@ -106,7 +100,7 @@ const titulo = "Cubosite 🧊";
       </section>
     </main>
 
-    <!-- Footer Avanzado con Estadísticas de Bitácora -->
+    <!-- Footer Avanzado -->
     <footer class="footer-advanced">
       <div class="footer-container">
         <div class="footer-col">
@@ -116,24 +110,24 @@ const titulo = "Cubosite 🧊";
         </div>
 
         <div class="footer-col">
-          <h4>📊 Métricas de Bitácora</h4>
-          <ul class="stats-list">
-            <li>📌 Artículos totales: <strong>{totalPosts}</strong></li>
-            <li>⏱️ Tiempo de lectura global: <strong>~{totalReadingMinutes} mins</strong></li>
-            <li>🔄 Última compilación: <strong>{buildDateStr}</strong></li>
-            <li>⌨️ Tip: Presiona <code style="color:var(--accent);">Ctrl + K</code> para comandos</li>
+          <h4>Contacto & Enlaces</h4>
+          <ul>
+            <li><a href="/">📩 Soporte / Reportar Error</a></li>
+            <li><a href="https://github.com" target="_blank">🐙 Repositorio GitHub</a></li>
+            <li><a href="/">💡 Sugerir Contenido</a></li>
+            <li><a href="/">📜 Manual SKILL.md</a></li>
           </ul>
         </div>
 
         <div class="footer-col">
           <h4>Actualizaciones & Búsqueda</h4>
-          <p class="update-info">Versión: <strong>v4.1 Paginated + Palette</strong></p>
+          <p class="update-info">Versión: <strong>v3.8 Paginated</strong></p>
           
           <div class="footer-search-box">
             <input 
               type="text" 
               id="searchInputBottom" 
-              placeholder="🔍 Búsqueda rápida..." 
+              placeholder="🔍 Búsqueda rápida abajo..." 
               autocomplete="off"
             />
           </div>
@@ -141,28 +135,11 @@ const titulo = "Cubosite 🧊";
       </div>
 
       <div class="footer-bottom">
-        <p>Hecho con 🧊 y Astro por CuBo. Todos los derechos reservados.</p>
+        <p>Hecho con 🧊 y Astro por Cubo. Todos los derechos reservados.</p>
       </div>
     </footer>
 
-    <!-- Modal de Paleta de Comandos (Ctrl + K) -->
-    <div id="commandPalette" class="command-palette-backdrop">
-      <div class="command-palette-modal">
-        <input type="text" id="paletteInput" class="command-palette-input" placeholder="Escribe un comando o busca una sección..." autocomplete="off">
-        <ul id="paletteList" class="command-palette-list">
-          <li class="command-palette-item" data-action="home">🏠 Ir al Inicio <span>Ctrl+H</span></li>
-          <li class="command-palette-item" data-action="terror">👻 Categoría: Terror <span>Ctrl+1</span></li>
-          <li class="command-palette-item" data-action="comedia">😂 Categoría: Comedia <span>Ctrl+2</span></li>
-          <li class="command-palette-item" data-action="ficcion">🚀 Categoría: Ficción <span>Ctrl+3</span></li>
-          <li class="command-palette-item" data-action="theme-dark">🌙 Cambiar a Tema Dark <span>Ctrl+D</span></li>
-          <li class="command-palette-item" data-action="theme-light">☀️ Cambiar a Tema Gris Claro <span>Ctrl+L</span></li>
-          <li class="command-palette-item" data-action="theme-green">🟢 Cambiar a Tema Green <span>Ctrl+G</span></li>
-          <li class="command-palette-item" data-action="github">🐙 Abrir Repositorio GitHub <span>Link</span></li>
-        </ul>
-      </div>
-    </div>
-
-    <!-- Script de Reloj, Clima, Temas, Búsqueda, Paginación (24/pág) y Paleta de Comandos -->
+    <!-- Script de Reloj, Clima, Temas, Búsqueda y Paginación de 24/pág -->
     <script is:inline>
       function updateClock() {
         const clockElement = document.getElementById('liveClock');
@@ -238,108 +215,4 @@ const titulo = "Cubosite 🧊";
       const searchInput = document.getElementById('searchInput');
       const searchInputBottom = document.getElementById('searchInputBottom');
       const cardsGrid = document.getElementById('cardsGrid');
-      const allCards = cardsGrid ? Array.from(cardsGrid.getElementsByClassName('card')) : [];
-      const noResults = document.getElementById('noResults');
-      const paginationControls = document.getElementById('paginationControls');
-      const prevPageBtn = document.getElementById('prevPageBtn');
-      const nextPageBtn = document.getElementById('nextPageBtn');
-      const pageIndicator = document.getElementById('pageIndicator');
-      const postsSection = document.getElementById('postsSection');
-
-      function renderPosts() {
-        const term = currentSearchTerm.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-        
-        // Filtrar tarjetas que coinciden con la búsqueda
-        const matchingCards = allCards.filter(card => {
-          const text = card.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-          return text.includes(term);
-        });
-
-        const totalPages = Math.max(1, Math.ceil(matchingCards.length / ITEMS_PER_PAGE));
-        if (currentPage > totalPages) currentPage = totalPages;
-
-        const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
-        const endIndex = startIndex + ITEMS_PER_PAGE;
-
-        // Ocultar todas las tarjetas primero
-        allCards.forEach(card => card.style.display = 'none');
-
-        // Mostrar únicamente las 24 de la página actual
-        matchingCards.slice(startIndex, endIndex).forEach(card => {
-          card.style.display = 'block';
-        });
-
-        // Mostrar mensaje si no hay coincidencias
-        if (noResults) {
-          noResults.style.display = matchingCards.length === 0 ? 'block' : 'none';
-        }
-
-        // Actualizar controles de paginación
-        if (paginationControls) {
-          if (matchingCards.length <= ITEMS_PER_PAGE) {
-            paginationControls.style.display = 'none';
-          } else {
-            paginationControls.style.display = 'flex';
-            if (pageIndicator) pageIndicator.textContent = `Página ${currentPage} de ${totalPages}`;
-            if (prevPageBtn) {
-              prevPageBtn.disabled = currentPage === 1;
-              prevPageBtn.style.opacity = currentPage === 1 ? '0.4' : '1';
-              prevPageBtn.style.cursor = currentPage === 1 ? 'not-allowed' : 'pointer';
-            }
-            if (nextPageBtn) {
-              nextPageBtn.disabled = currentPage === totalPages;
-              nextPageBtn.style.opacity = currentPage === totalPages ? '0.4' : '1';
-              nextPageBtn.style.cursor = currentPage === totalPages ? 'not-allowed' : 'pointer';
-            }
-          }
-        }
-      }
-
-      if (prevPageBtn) {
-        prevPageBtn.addEventListener('click', () => {
-          if (currentPage > 1) {
-            currentPage--;
-            renderPosts();
-            if (postsSection) postsSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-
-      if (nextPageBtn) {
-        nextPageBtn.addEventListener('click', () => {
-          const term = currentSearchTerm.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().trim();
-          const matchingCount = allCards.filter(c => c.textContent.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().includes(term)).length;
-          const totalPages = Math.ceil(matchingCount / ITEMS_PER_PAGE);
-          if (currentPage < totalPages) {
-            currentPage++;
-            renderPosts();
-            if (postsSection) postsSection.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      }
-
-      function handleSearch(query) {
-        currentSearchTerm = query;
-        currentPage = 1;
-        renderPosts();
-      }
-
-      if (searchInput) {
-        searchInput.addEventListener('input', (e) => {
-          if (searchInputBottom) searchInputBottom.value = e.target.value;
-          handleSearch(e.target.value);
-        });
-      }
-      if (searchInputBottom) {
-        searchInputBottom.addEventListener('input', (e) => {
-          if (searchInput) searchInput.value = e.target.value;
-          handleSearch(e.target.value);
-        });
-      }
-
-      // Leer parámetro ?q= si el usuario viene buscando desde un post
-      const urlParams = new URLSearchParams(window.location.search);
-      const initialQuery = urlParams.get('q');
-      if (initialQuery) {
-        if (searchInput) searchInput.value = initialQuery;
-        if (searchInputBottom) searchInputBottom.value = initialQuery;
+      const allCards = cards
