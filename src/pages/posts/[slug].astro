@@ -91,7 +91,7 @@ const readingTime = Math.ceil(wordCount / 200);
           <h1 class="post-title">{post.data.title}</h1>
           
           <div class="post-meta-info">
-            <span class="date">📅 {new Date(post.data.date).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric', timeZone: 'UTC' })}</span>
+            <span class="date">📅 {post.data.date.toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
             <span class="dot">•</span>
             <span class="read-time">⏱️ {readingTime} min lectura</span>
             
@@ -146,7 +146,7 @@ const readingTime = Math.ceil(wordCount / 200);
                 <a href={`/posts/${rel.slug || rel.id}`} class="related-card">
                   <h4>{rel.data.title}</h4>
                   <p>{rel.data.description}</p>
-                  <span class="date">{new Date(rel.data.date).toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric', timeZone: 'UTC' })}</span>
+                  <span class="date">{rel.data.date.toLocaleDateString('es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                 </a>
               ))}
             </div>
