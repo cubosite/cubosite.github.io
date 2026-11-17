@@ -1,7 +1,7 @@
 ---
 title: "ARCHIVOS"
-date: 2026-11-13
-category: "+Archivos"
+date: 2026-11-16
+category: "Ficcion"
 description: "Una mirada profunda al tráiler y análisis de la obra maestra de Nolan."
 ---
 
