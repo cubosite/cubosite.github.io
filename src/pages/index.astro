@@ -1,5 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
+import '../styles/global.css'; // <--- ¡Asegúrate de importar tu global.css aquí!
 
 const posts = await getCollection('posts');
 posts.sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
